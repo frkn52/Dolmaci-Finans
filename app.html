@@ -1,0 +1,5359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17322c">
+  <meta name="application-name" content="Dolmacı Finans">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Dolmacı Finans">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon-192.svg">
+  <title>Dolmacı Finans | Kişisel Finans Asistanı</title>
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --bg-deep: #d9c5a1;
+      --surface: rgba(255, 250, 241, 0.82);
+      --surface-strong: #fffaf1;
+      --surface-dark: #17322c;
+      --text: #1e211d;
+      --muted: #58645d;
+      --line: rgba(34, 44, 33, 0.12);
+      --accent: #d96c3f;
+      --accent-strong: #b44d24;
+      --accent-soft: #f4d7bf;
+      --green: #2f7d57;
+      --gold: #b88b2d;
+      --shadow: 0 24px 60px rgba(65, 49, 28, 0.16);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    body[data-theme="dark"] {
+      --bg: #0f1218;
+      --bg-deep: #1a2230;
+      --surface: rgba(25, 29, 37, 0.88);
+      --surface-strong: #171b23;
+      --surface-dark: #f3f6fb;
+      --text: #edf2fb;
+      --muted: #a8b3c7;
+      --line: rgba(223, 231, 244, 0.1);
+      --accent: #8c6cff;
+      --accent-strong: #a892ff;
+      --accent-soft: #2a2148;
+      --green: #43c287;
+      --gold: #d5a940;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(217, 108, 63, 0.16), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(47, 125, 87, 0.14), transparent 24%),
+        linear-gradient(180deg, #f7f2e8 0%, #efe4d1 48%, #f8f4ec 100%);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    body[data-theme="dark"] {
+      background:
+        radial-gradient(circle at top left, rgba(140, 108, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(67, 194, 135, 0.14), transparent 24%),
+        linear-gradient(180deg, #0e1218 0%, #141b24 52%, #0f131b 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.24) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.35;
+    }
+
+    body[data-theme="dark"]::before {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      opacity: 0.22;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 20px;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      min-height: calc(100vh - 40px);
+      padding: 24px 18px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(12, 14, 19, 0.98), rgba(20, 22, 28, 0.98));
+      color: #f3f1f7;
+      box-shadow: 0 28px 60px rgba(17, 18, 25, 0.28);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: 22px;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #f5f7fb;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-mark {
+      display: none;
+    }
+
+    .sidebar-logo-panel {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-logo-panel img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .sidebar-section {
+      display: grid;
+      gap: 12px;
+    }
+
+    .sidebar-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: rgba(243, 241, 247, 0.46);
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: rgba(243, 241, 247, 0.82);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+    }
+
+    button.sidebar-link {
+      width: 100%;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .sidebar-link.active,
+    .sidebar-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateX(2px);
+    }
+
+    .sidebar-icon {
+      width: 20px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .sidebar-promo {
+      padding: 18px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top center, rgba(129, 85, 255, 0.45), transparent 35%),
+        linear-gradient(180deg, rgba(39, 20, 78, 0.98), rgba(24, 18, 35, 0.98));
+      border: 1px solid rgba(168, 121, 255, 0.2);
+      display: grid;
+      gap: 10px;
+    }
+
+    .sidebar-promo strong {
+      font-size: 1.2rem;
+    }
+
+    .sidebar-promo p {
+      margin: 0;
+      color: rgba(243, 241, 247, 0.7);
+      line-height: 1.6;
+      font-size: 0.92rem;
+    }
+
+    .sidebar-footer {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(243, 241, 247, 0.82);
+    }
+
+    .sidebar-settings-panel {
+      display: none;
+      gap: 12px;
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-settings-panel.open {
+      display: grid;
+    }
+
+    .sidebar-settings-panel .field label {
+      color: rgba(243, 241, 247, 0.88);
+    }
+
+    .sidebar-settings-panel .field select {
+      background: rgba(10, 12, 18, 0.9);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #edf2fb;
+    }
+
+    .app-main {
+      min-width: 0;
+      display: grid;
+      gap: 18px;
+    }
+
+    .content-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      border-radius: 24px;
+      background: rgba(255, 250, 241, 0.82);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .content-top h1 {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.3rem);
+      max-width: none;
+    }
+
+    .content-top p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .content-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 280px;
+      flex: 0 1 360px;
+      max-width: 460px;
+      margin: 0;
+    }
+
+    .search-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mini-search {
+      min-width: 0;
+      width: 100%;
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 22px 40px rgba(34, 27, 18, 0.12);
+      backdrop-filter: blur(16px);
+    }
+
+    .search-suggestions[hidden] {
+      display: none !important;
+    }
+
+    .search-suggestion {
+      width: 100%;
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      border-radius: 14px;
+      background: rgba(247, 241, 230, 0.74);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .search-suggestion strong {
+      color: var(--surface-dark);
+      font-size: 0.95rem;
+    }
+
+    .search-suggestion span {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .search-suggestion:hover {
+      transform: translateY(-1px);
+      border-color: rgba(217, 108, 63, 0.24);
+      background: rgba(244, 215, 191, 0.4);
+    }
+
+    .search-match {
+      outline: 2px solid rgba(217, 108, 63, 0.28);
+      box-shadow: 0 16px 32px rgba(217, 108, 63, 0.12);
+    }
+
+    .search-dim {
+      opacity: 0.42;
+      transition: opacity 0.2s ease, box-shadow 0.2s ease, outline-color 0.2s ease;
+    }
+
+    .dashboard-main {
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .dashboard-main .container {
+      width: 100%;
+      margin: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 241, 230, 0.72);
+      border-bottom: 1px solid rgba(34, 44, 33, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fffaf3;
+      background: linear-gradient(145deg, var(--accent), #ee9c5e);
+      box-shadow: 0 16px 28px rgba(217, 108, 63, 0.24);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .nav-cta {
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: white;
+      background: var(--surface-dark);
+      font-weight: 700;
+    }
+
+    .hero {
+      padding: 48px 0 26px;
+    }
+
+    .live-rates-strip {
+      padding: 18px 0 4px;
+    }
+
+    .live-rates-card {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(255, 250, 241, 0.92), rgba(244, 230, 205, 0.88));
+      box-shadow: var(--shadow);
+    }
+
+    .live-rates-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .live-rates-head h2 {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .live-rates-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .rate-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .rate-actions select {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 33, 29, 0.12);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .rate-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(23, 50, 44, 0.06);
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .rate-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .rate-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      display: grid;
+      gap: 10px;
+    }
+
+    .rate-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+
+    .rate-card strong {
+      display: block;
+      font-size: 1.25rem;
+      color: var(--surface-dark);
+      margin-bottom: 4px;
+    }
+
+    .rate-card small {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .rate-meta {
+      display: grid;
+      gap: 6px;
+    }
+
+    .rate-headline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .rate-symbol {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(23, 50, 44, 0.08);
+      color: var(--surface-dark);
+      font-weight: 800;
+    }
+
+    .rate-change {
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .rate-change.up {
+      color: #2f7d57;
+    }
+
+    .rate-change.down {
+      color: #c1493c;
+    }
+
+    .rate-change.flat {
+      color: var(--muted);
+    }
+
+    .mini-sparkline {
+      display: flex;
+      align-items: end;
+      gap: 5px;
+      height: 34px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      border-radius: 999px 999px 4px 4px;
+      background: rgba(23, 50, 44, 0.18);
+      min-height: 6px;
+    }
+
+    .mini-bar.up {
+      background: linear-gradient(180deg, #8fd6ad, #2f7d57);
+    }
+
+    .mini-bar.down {
+      background: linear-gradient(180deg, #f2a197, #c1493c);
+    }
+
+    .mini-bar.flat {
+      background: linear-gradient(180deg, #c7d3cf, #7b8f87);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .hero-copy,
+    .hero-panel,
+    .panel,
+    .insight-card,
+    .profile-card,
+    .workspace-card,
+    .cta-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-copy {
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(47, 125, 87, 0.12);
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.04;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 7vw, 6.2rem);
+      max-width: 9ch;
+    }
+
+    .lead,
+    .section-intro,
+    .panel p,
+    .insight-card p,
+    .profile-card p,
+    .workspace-card p,
+    .stat-label,
+    .data-row span,
+    .mini-card p,
+    .step p,
+    .cta-panel p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .lead {
+      max-width: 58ch;
+      margin: 20px 0 0;
+      font-size: 1.04rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(32, 26, 18, 0.12);
+    }
+
+    .button.primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #ef8b52);
+    }
+
+    .button.secondary {
+      border-color: rgba(30, 33, 29, 0.14);
+      background: rgba(255, 255, 255, 0.54);
+    }
+
+    .button.danger {
+      color: white;
+      background: linear-gradient(135deg, #a83f34, #d55c48);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.56);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+      color: var(--surface-dark);
+    }
+
+    .spark {
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(217, 108, 63, 0.12);
+      filter: blur(6px);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .spark.one {
+      width: 180px;
+      height: 180px;
+      top: -50px;
+      right: -60px;
+    }
+
+    .spark.two {
+      width: 86px;
+      height: 86px;
+      right: 100px;
+      bottom: 24px;
+      animation-delay: 1s;
+    }
+
+    .hero-panel {
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+        rgba(20, 44, 38, 0.95);
+      color: #f5f1e8;
+    }
+
+    .dashboard-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 251, 244, 0.08);
+      border: 1px solid rgba(255, 251, 244, 0.1);
+    }
+
+    .dashboard-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dashboard-tools {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+
+    .dashboard-tools label {
+      font-size: 0.8rem;
+      color: rgba(245, 241, 232, 0.68);
+    }
+
+    .dashboard-tools select {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.1);
+      color: #f5f1e8;
+    }
+
+    .dashboard-tools select option {
+      color: var(--text);
+    }
+
+    .dashboard-head span,
+    .analysis-head span {
+      color: rgba(245, 241, 232, 0.68);
+      font-size: 0.92rem;
+    }
+
+    .balance {
+      margin-top: 14px;
+      font-size: clamp(2.3rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .graph {
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      height: 120px;
+      margin-top: 18px;
+    }
+
+    .graph-panel {
+      margin-top: 18px;
+      min-height: 220px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 16px 16px 8px 8px;
+      background: linear-gradient(180deg, #f3d4b3, #d96c3f);
+      opacity: 0.45;
+      transform-origin: bottom;
+      animation: rise 1.2s ease forwards;
+    }
+
+    .bar.active {
+      opacity: 1;
+      background: linear-gradient(180deg, #f5dd8f, #c58e24);
+    }
+
+    .graph-view {
+      display: none;
+    }
+
+    .graph-view.active {
+      display: block;
+      min-height: 220px;
+    }
+
+    .graph-labels {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      color: rgba(245, 241, 232, 0.72);
+      font-size: 0.76rem;
+      text-align: center;
+      align-items: start;
+    }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 16px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .donut-chart {
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(#f3d4b3 0deg, #d96c3f 120deg, #f5dd8f 240deg, #2f7d57 360deg);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .donut-chart::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      background: rgba(20, 44, 38, 0.96);
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 28px;
+      color: #fff3df;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .donut-legend,
+    .category-breakdown {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .donut-legend-item,
+    .breakdown-item {
+      display: grid;
+      gap: 6px;
+    }
+
+    .legend-top,
+    .breakdown-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(245, 241, 232, 0.78);
+      font-size: 0.9rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .breakdown-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .breakdown-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f3d4b3, #d96c3f);
+    }
+
+    .analysis-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(243, 215, 188, 0.16), rgba(255, 255, 255, 0.06));
+      border: 1px solid rgba(255, 244, 225, 0.12);
+    }
+
+    .analysis-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .analysis-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(244, 215, 191, 0.14);
+      color: #f4d7bf;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .analysis-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 12px;
+    }
+
+    .analysis-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: rgba(245, 241, 232, 0.78);
+    }
+
+    .data-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 251, 244, 0.08);
+    }
+
+    .data-row strong {
+      color: #fff3df;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+    }
+
+    .section-intro {
+      max-width: 60ch;
+      margin: 10px 0 0;
+    }
+
+    .feature-grid,
+    .insight-grid,
+    .profile-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .panel {
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      top: -40px;
+      right: -36px;
+      background: rgba(217, 108, 63, 0.08);
+    }
+
+    .panel h3 {
+      font-size: 1.45rem;
+      margin-bottom: 12px;
+    }
+
+    .panel-number {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-weight: 800;
+    }
+
+    .feature-points {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .feature-points span {
+      padding: 11px 13px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .story-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+    }
+
+    .dark-panel {
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, #1a3a33 0%, #122a25 100%);
+      color: #f6f1e7;
+      box-shadow: var(--shadow);
+    }
+
+    .dark-panel h3 {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .dark-panel p {
+      margin: 0 0 18px;
+      color: rgba(246, 241, 231, 0.74);
+      line-height: 1.7;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .metric-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .metric-list strong {
+      color: #fff8eb;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(30, 33, 29, 0.1);
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .step-index {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--surface-dark);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .insight-card {
+      padding: 24px;
+    }
+
+    .insight-label {
+      display: inline-flex;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(47, 125, 87, 0.12);
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .insight-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .insight-card strong {
+      color: var(--accent-strong);
+    }
+
+    .profile-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      min-width: 0;
+    }
+
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .profile-card {
+      padding: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .profile-card.featured {
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.14), rgba(255, 250, 241, 0.92));
+      border-color: rgba(180, 77, 36, 0.2);
+    }
+
+    .profile-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--surface-dark);
+      letter-spacing: -0.04em;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: normal;
+    }
+
+    .profile-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-list span {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+    }
+
+    .profile-showcase {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .profile-hero-card {
+      padding: 28px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.22), transparent 28%),
+        linear-gradient(145deg, #17322c 0%, #224940 55%, #2d5d51 100%);
+      color: #fff4e6;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      gap: 20px;
+    }
+
+    .profile-hero-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .profile-hero-top span {
+      color: rgba(255, 244, 230, 0.72);
+      font-size: 0.92rem;
+    }
+
+    .profile-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f7dfb9;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .profile-hero-card h3 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 0;
+      line-height: 1.08;
+    }
+
+    .profile-hero-card p {
+      margin: 0;
+      color: rgba(255, 244, 230, 0.76);
+      line-height: 1.7;
+    }
+
+    .profile-meter {
+      display: grid;
+      gap: 10px;
+    }
+
+    .meter-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .meter-fill {
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f5dd8f, #d96c3f);
+    }
+
+    .meter-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(255, 244, 230, 0.78);
+      font-size: 0.92rem;
+    }
+
+    .profile-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .profile-chip {
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff0d8;
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.45;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .profile-detail-card {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.66);
+      box-shadow: var(--shadow);
+    }
+
+    .profile-detail-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .profile-detail-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .detail-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .detail-points span {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+    }
+
+    .persona-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .persona-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.08), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(180, 77, 36, 0.1);
+    }
+
+    .persona-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--surface-dark);
+    }
+
+    .workspace-card {
+      padding: 26px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .workspace-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .settings-card {
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 16px;
+    }
+
+    .settings-card h3 {
+      font-size: 1.45rem;
+      margin: 0;
+    }
+
+    .settings-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .budget-note {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(217, 108, 63, 0.1), rgba(255, 255, 255, 0.68));
+      border: 1px solid rgba(180, 77, 36, 0.1);
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    body[data-theme="dark"] .budget-note {
+      background: linear-gradient(135deg, rgba(140, 108, 255, 0.12), rgba(20, 24, 33, 0.92));
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #aeb8ca;
+    }
+
+    body[data-theme="dark"] .content-top,
+    body[data-theme="dark"] .live-rates-card,
+    body[data-theme="dark"] .rate-card,
+    body[data-theme="dark"] .workspace-card,
+    body[data-theme="dark"] .profile-card,
+    body[data-theme="dark"] .profile-detail-card,
+    body[data-theme="dark"] .settings-card,
+    body[data-theme="dark"] .summary-card,
+    body[data-theme="dark"] .entry-item,
+    body[data-theme="dark"] .empty-state,
+    body[data-theme="dark"] .rate-status,
+    body[data-theme="dark"] .setup-intro,
+    body[data-theme="dark"] .form-section,
+    body[data-theme="dark"] .persona-card,
+    body[data-theme="dark"] .section-cta-banner,
+    body[data-theme="dark"] .cta-panel,
+    body[data-theme="dark"] .profile-preview,
+    body[data-theme="dark"] .mini-card,
+    body[data-theme="dark"] .panel,
+    body[data-theme="dark"] .insight-card {
+      background: rgba(20, 24, 33, 0.88);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    body[data-theme="dark"] .hero-copy {
+      background: rgba(18, 22, 31, 0.86);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body[data-theme="dark"] .mini-search,
+    body[data-theme="dark"] .rate-actions select,
+    body[data-theme="dark"] .field input,
+    body[data-theme="dark"] .field select {
+      background: rgba(12, 15, 21, 0.86);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body[data-theme="dark"] .search-suggestions {
+      background: rgba(16, 20, 28, 0.96);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 22px 42px rgba(0, 0, 0, 0.28);
+    }
+
+    body[data-theme="dark"] .search-suggestion {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body[data-theme="dark"] .search-suggestion strong {
+      color: #f4f7fb;
+    }
+
+    body[data-theme="dark"] .search-suggestion span {
+      color: #aeb8ca;
+    }
+
+    body[data-theme="dark"] .search-suggestion:hover {
+      border-color: rgba(140, 108, 255, 0.26);
+      background: rgba(140, 108, 255, 0.12);
+    }
+
+    body[data-theme="dark"] .search-match {
+      outline-color: rgba(140, 108, 255, 0.34);
+      box-shadow: 0 16px 34px rgba(140, 108, 255, 0.16);
+    }
+
+    body[data-theme="dark"] .mini-search::placeholder,
+    body[data-theme="dark"] .field input::placeholder {
+      color: #7f8aa1;
+    }
+
+    body[data-theme="dark"] .rate-symbol,
+    body[data-theme="dark"] .preview-pill,
+    body[data-theme="dark"] .detail-points span,
+    body[data-theme="dark"] .profile-list span,
+    body[data-theme="dark"] .profile-chip,
+    body[data-theme="dark"] .data-row,
+    body[data-theme="dark"] .tag,
+    body[data-theme="dark"] .inline-cta,
+    body[data-theme="dark"] .watch-item {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    body[data-theme="dark"] .rate-card strong,
+    body[data-theme="dark"] .summary-card strong,
+    body[data-theme="dark"] .preview-pill strong,
+    body[data-theme="dark"] .persona-card strong,
+    body[data-theme="dark"] .settings-card h3,
+    body[data-theme="dark"] .workspace-card h3,
+    body[data-theme="dark"] .profile-detail-card h3,
+    body[data-theme="dark"] .form-section-header h4,
+    body[data-theme="dark"] .field label,
+    body[data-theme="dark"] .setup-intro strong,
+    body[data-theme="dark"] .watch-main strong,
+    body[data-theme="dark"] .watch-value strong,
+    body[data-theme="dark"] .watchlist-header h4 {
+      color: #f4f7fb;
+    }
+
+    body[data-theme="dark"] .rate-card span,
+    body[data-theme="dark"] .rate-card small,
+    body[data-theme="dark"] .settings-card p,
+    body[data-theme="dark"] .field-hint,
+    body[data-theme="dark"] .form-section-header p,
+    body[data-theme="dark"] .entry-meta,
+    body[data-theme="dark"] .summary-card span,
+    body[data-theme="dark"] .preview-pill span,
+    body[data-theme="dark"] .section-intro,
+    body[data-theme="dark"] .lead,
+    body[data-theme="dark"] .content-top p,
+    body[data-theme="dark"] .live-rates-head p,
+    body[data-theme="dark"] .rate-status,
+    body[data-theme="dark"] .empty-state,
+    body[data-theme="dark"] .setup-points,
+    body[data-theme="dark"] .detail-points span,
+    body[data-theme="dark"] .persona-card,
+    body[data-theme="dark"] .cta-panel p,
+    body[data-theme="dark"] .watch-main span,
+    body[data-theme="dark"] .watchlist-header p {
+      color: #aeb8ca;
+    }
+
+    body[data-theme="dark"] .investment-watchlist {
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body[data-theme="dark"] .section-cta-banner strong,
+    body[data-theme="dark"] .content-top h1,
+    body[data-theme="dark"] .live-rates-head h2 {
+      color: #f4f7fb;
+    }
+
+    body[data-theme="dark"] .button.secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #edf2fb;
+    }
+
+    body[data-theme="dark"] .button.primary {
+      background: linear-gradient(135deg, #7d63ff, #a892ff);
+      color: #ffffff;
+    }
+
+    body[data-theme="dark"] .tag:hover,
+    body[data-theme="dark"] .data-row:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .setup-intro {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.1), rgba(255, 255, 255, 0.58));
+      border: 1px solid rgba(180, 77, 36, 0.1);
+    }
+
+    .setup-intro strong {
+      color: var(--accent-strong);
+      font-size: 1rem;
+    }
+
+    .setup-points {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-section {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.54);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .form-section-header {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-section-header h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--surface-dark);
+    }
+
+    .form-section-header p,
+    .field-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--surface-dark);
+    }
+
+    .field input,
+    .field select {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 33, 29, 0.12);
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--text);
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: 2px solid rgba(217, 108, 63, 0.18);
+      border-color: rgba(180, 77, 36, 0.28);
+    }
+
+    .inline-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .tag-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .button.submit {
+      width: fit-content;
+      cursor: pointer;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .profile-preview {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(23, 50, 44, 0.98), rgba(28, 62, 54, 0.94));
+      color: #fff4e6;
+    }
+
+    .profile-preview h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .preview-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .preview-pill {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .preview-pill span {
+      display: block;
+      color: rgba(255, 244, 230, 0.68);
+      font-size: 0.84rem;
+      margin-bottom: 4px;
+    }
+
+    .preview-pill strong {
+      font-size: 1rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .summary-card strong {
+      font-size: 1.4rem;
+      color: var(--surface-dark);
+    }
+
+    .entry-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .investment-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .investment-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .investment-watchlist {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .watchlist-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .watchlist-header h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--surface-dark);
+    }
+
+    .watchlist-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .watchlist-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .watch-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(248, 250, 248, 0.9);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .watch-main {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .watch-main strong {
+      color: var(--surface-dark);
+    }
+
+    .watch-main span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .watch-value {
+      display: grid;
+      gap: 4px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .watch-value strong {
+      font-size: 1rem;
+      color: var(--surface-dark);
+    }
+
+    .watch-change {
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .watch-change.up {
+      color: #198754;
+    }
+
+    .watch-change.down {
+      color: #dc3545;
+    }
+
+    .watch-change.flat {
+      color: var(--muted);
+    }
+
+    .investment-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      border-left: 5px solid rgba(47, 125, 87, 0.3);
+    }
+
+    .investment-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .investment-meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .investment-value {
+      display: grid;
+      gap: 4px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .investment-value strong {
+      color: var(--surface-dark);
+      font-size: 1.05rem;
+    }
+
+    .investment-profit {
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .investment-profit.up {
+      color: #2f7d57;
+    }
+
+    .investment-profit.down {
+      color: #c1493c;
+    }
+
+    .entry-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      border-left: 5px solid rgba(30, 33, 29, 0.12);
+    }
+
+    .entry-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entry-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--surface-dark);
+    }
+
+    .entry-meta,
+    .entry-amount {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .entry-amount {
+      font-weight: 800;
+      color: var(--accent-strong);
+      white-space: nowrap;
+    }
+
+    .entry-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .entry-action {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .entry-action.danger {
+      color: #a83f34;
+      border-color: rgba(168, 63, 52, 0.14);
+      background: rgba(168, 63, 52, 0.08);
+    }
+
+    .entry-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+    }
+
+    .entry-toolbar-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .helper-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .hero-copy:hover,
+      .hero-panel:hover,
+      .panel:hover,
+      .insight-card:hover,
+      .profile-card:hover,
+      .workspace-card:hover,
+      .cta-panel:hover,
+      .summary-card:hover,
+      .mini-card:hover,
+      .entry-item:hover,
+      .setup-intro:hover,
+      .form-section:hover,
+      .profile-preview:hover,
+      .step:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 70px rgba(65, 49, 28, 0.2);
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      }
+
+      .hero-copy:hover,
+      .panel:hover,
+      .insight-card:hover,
+      .profile-card:hover,
+      .workspace-card:hover,
+      .summary-card:hover,
+      .entry-item:hover,
+      .form-section:hover {
+        border-color: rgba(180, 77, 36, 0.18);
+      }
+
+      .tag,
+      .legend-dot,
+      .breakdown-fill,
+      .data-row,
+      .donut-chart,
+      .graph .bar {
+        transition: transform 0.22s ease, opacity 0.22s ease, filter 0.22s ease, background-color 0.22s ease;
+      }
+
+      .tag:hover {
+        transform: translateY(-2px);
+        filter: saturate(1.1);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .data-row:hover {
+        transform: translateX(3px);
+        background: rgba(255, 251, 244, 0.14);
+      }
+
+      .graph .bar:hover {
+        opacity: 1;
+        transform: scaleY(1.04);
+      }
+
+      .donut-chart:hover {
+        transform: rotate(5deg) scale(1.02);
+      }
+
+      .entry-item:hover .entry-amount {
+        color: var(--surface-dark);
+      }
+    }
+
+    .empty-state {
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px dashed rgba(30, 33, 29, 0.14);
+      color: var(--muted);
+    }
+
+    .ai-note {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.12), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(180, 77, 36, 0.12);
+      color: var(--text);
+    }
+
+    .ai-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent-strong);
+    }
+
+    .rate-status {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    .rate-status strong {
+      color: var(--surface-dark);
+    }
+
+    .cta-panel {
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background:
+        radial-gradient(circle at top left, rgba(217, 108, 63, 0.14), transparent 34%),
+        linear-gradient(135deg, rgba(255, 250, 241, 0.94), rgba(244, 230, 205, 0.9));
+    }
+
+    .cta-panel h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    footer {
+      padding: 18px 0 40px;
+    }
+
+    .footer-card {
+      padding: 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @keyframes rise {
+      from {
+        transform: scaleY(0.2);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .app-shell {
+        grid-template-columns: 210px minmax(0, 1fr);
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .hero-grid,
+      .profile-showcase,
+      .workspace-grid,
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content-top {
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        min-height: auto;
+        grid-template-rows: auto;
+      }
+
+      .content-top {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .story-layout,
+      .feature-grid,
+      .insight-grid,
+      .profile-grid,
+      .rate-grid,
+      .cta-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-panel {
+        display: grid;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar-brand,
+      .sidebar-logo-panel {
+        width: 100%;
+      }
+
+      .sidebar-logo-panel img {
+        max-width: 220px;
+      }
+
+      .content-actions {
+        width: 100%;
+      }
+
+      .search-box,
+      .search-controls,
+      .rate-actions {
+        width: 100%;
+        max-width: none;
+      }
+
+      .search-controls,
+      .rate-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .mini-search {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .topbar-inner,
+      .section-header,
+      .footer-card {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        gap: 12px;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .nav a {
+        white-space: nowrap;
+      }
+
+      .dashboard-head,
+      .analysis-head,
+      .donut-wrap,
+      .entry-item {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .dashboard-tools {
+        width: 100%;
+        justify-items: start;
+      }
+
+      .dashboard-tools select {
+        width: 100%;
+      }
+
+      .field-row,
+      .summary-grid,
+      .inline-form,
+      .preview-grid,
+      .graph-labels,
+      .profile-showcase,
+      .profile-chip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .entry-amount {
+        white-space: normal;
+      }
+
+      .entry-actions,
+      .entry-toolbar,
+      .entry-toolbar-group {
+        width: 100%;
+      }
+
+      .entry-action {
+        flex: 1 1 0;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        width: min(100% - 20px, 1160px);
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .topbar-inner {
+        padding: 14px 0;
+      }
+
+      .brand {
+        width: 100%;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .hero-actions,
+      .form-actions {
+        width: 100%;
+      }
+
+      .hero-actions .button,
+      .form-actions .button,
+      .nav-cta,
+      .button.submit {
+        width: 100%;
+      }
+
+      .content-actions .button,
+      .rate-actions .button,
+      .rate-actions select,
+      .entry-toolbar-group .button {
+        width: 100%;
+      }
+
+      .balance {
+        font-size: 2rem;
+      }
+
+      .graph {
+        height: 92px;
+        gap: 8px;
+      }
+
+      .donut-chart {
+        width: 112px;
+        height: 112px;
+      }
+
+      .donut-chart::after {
+        inset: 18px;
+      }
+
+      .donut-center {
+        padding: 20px;
+        font-size: 0.85rem;
+      }
+
+      .graph-labels {
+        display: none;
+      }
+
+      .setup-intro,
+      .form-section,
+      .profile-preview,
+      .summary-card,
+      .entry-item,
+      .ai-note,
+      .content-top,
+      .live-rates-card,
+      .workspace-card,
+      .profile-hero-card,
+      .profile-detail-card {
+        padding: 16px;
+      }
+
+      .sidebar {
+        padding: 18px 14px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-copy,
+      .hero-panel,
+      .panel,
+      .insight-card,
+      .price-card,
+      .cta-panel,
+      .dark-panel,
+      .step {
+        border-radius: 24px;
+      }
+
+      .hero-copy,
+      .hero-panel,
+      .panel,
+      .insight-card,
+      .price-card,
+      .workspace-card {
+        padding: 22px;
+      }
+
+      h1 {
+        max-width: 11ch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="sidebar-mark">Df</span>
+        <span>Dolmacı Finans</span>
+      </div>
+
+      <div class="sidebar-logo-panel">
+        <img src="dolmaci-logo.png" alt="Dolmacı Finans logosu">
+      </div>
+
+      <div class="sidebar-section">
+        <span class="sidebar-label">Menü</span>
+        <nav class="sidebar-nav" aria-label="Dashboard bölümleri">
+          <a class="sidebar-link active" href="#anasayfa"><span class="sidebar-icon">◉</span><span data-i18n="nav_dashboard">Dashboard</span></a>
+          <a class="sidebar-link" href="#canli-kur"><span class="sidebar-icon">$</span><span data-i18n="nav_rates">Canlı Kur</span></a>
+          <a class="sidebar-link" href="#profil"><span class="sidebar-icon">◎</span><span data-i18n="nav_profile">Profil</span></a>
+          <a class="sidebar-link" href="#kurulum"><span class="sidebar-icon">+</span><span data-i18n="nav_transactions">İşlemler</span></a>
+          <button class="sidebar-link" id="settings-toggle" type="button" aria-expanded="false" aria-controls="sidebar-settings-panel"><span class="sidebar-icon">⚙</span><span data-i18n="nav_settings">Ayarlar</span></button>
+        </nav>
+        <div class="sidebar-settings-panel" id="sidebar-settings-panel">
+          <div class="field">
+            <label for="language-select" data-i18n="language_label">Arayüz dili</label>
+            <select id="language-select">
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="theme-select" data-i18n="theme_label">Görünüm teması</label>
+            <select id="theme-select">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <span class="sidebar-label">Genel</span>
+        <nav class="sidebar-nav" aria-label="Genel">
+          <a class="sidebar-link" href="#kurulum"><span class="sidebar-icon">↺</span><span data-i18n="nav_data_entry">Veri Girişi</span></a>
+          <a class="sidebar-link" href="#basla"><span class="sidebar-icon">?</span><span data-i18n="nav_help">Yardım</span></a>
+          <a class="sidebar-link" href="index.html"><span class="sidebar-icon">↩</span><span data-i18n="nav_back">Tanıtıma Dön</span></a>
+        </nav>
+      </div>
+
+      <div class="sidebar-promo">
+        <strong data-i18n="promo_title">Akıllı Finans Alanın</strong>
+        <p data-i18n="promo_text">Profilini, kurlarını ve harcama akışını tek yerden yönet. Bu alanı zamanla daha da güçlü bir dashboard’a çevirebiliriz.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="#kurulum"><span class="sidebar-icon">✦</span><span data-i18n="quick_action">Hızlı Kayıt</span></a>
+        <a href="index.html"><span class="sidebar-icon">⤴</span><span data-i18n="exit_link">Çıkış / Tanıtım</span></a>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="content-top">
+        <div>
+          <h1 data-i18n="top_title">Hoş geldin, finans panelin hazır.</h1>
+          <p data-i18n="top_text">Profil, canlı kur, grafikler ve harcama kayıtların tek akışta burada.</p>
+        </div>
+        <div class="content-actions">
+          <div class="search-box">
+            <div class="search-controls">
+              <input class="mini-search" id="dashboard-search" type="text" placeholder="Bir şey ara..." data-i18n-placeholder="search_placeholder" autocomplete="off">
+              <button class="button secondary" id="dashboard-search-button" type="button" data-i18n="search_button">Ara</button>
+            </div>
+            <div class="search-suggestions" id="search-suggestions" hidden></div>
+          </div>
+          <a class="button secondary" href="#canli-kur" data-i18n="rates_panel">Kur Paneli</a>
+          <a class="button primary" href="#kurulum" data-i18n="new_transaction">Yeni İşlem</a>
+        </div>
+      </header>
+
+      <main class="dashboard-main">
+    <section class="live-rates-strip" id="canli-kur">
+      <div class="container">
+        <article class="live-rates-card">
+          <div class="live-rates-head">
+            <div class="entry-main">
+              <h2 data-i18n="rates_title">Canlı Kur</h2>
+              <p data-i18n="rates_text">Uygulamanın kullandığı güncel döviz karşılıklarını buradan anlık takip edebilirsin.</p>
+              <div class="rate-updated" id="rate-updated-label" data-i18n="rate_updated_waiting">Son güncelleme: Bekleniyor</div>
+            </div>
+            <div class="rate-actions">
+              <select id="rates-base-select" aria-label="Canlı kur ana referansı">
+                <option value="TRY">Referans: TRY</option>
+                <option value="USD">Referans: USD</option>
+                <option value="EUR">Referans: EUR</option>
+                <option value="GBP">Referans: GBP</option>
+              </select>
+              <a class="button secondary" href="#kurulum" data-i18n="add_transaction">İşlem Ekle</a>
+              <button class="button primary" id="refresh-rates-button" type="button" data-i18n="refresh_rates">Kurları Yenile</button>
+            </div>
+          </div>
+
+          <div class="rate-grid" id="rate-grid">
+            <div class="rate-card">
+              <div class="rate-headline">
+                <span>TRY</span>
+                <div class="rate-symbol">₺</div>
+              </div>
+              <strong>1.00</strong>
+              <small>Ana referans</small>
+            </div>
+            <div class="rate-card">
+              <div class="rate-headline">
+                <span>USD</span>
+                <div class="rate-symbol">$</div>
+              </div>
+              <strong>32.00</strong>
+              <small>Yedek başlangıç kuru</small>
+            </div>
+            <div class="rate-card">
+              <div class="rate-headline">
+                <span>EUR</span>
+                <div class="rate-symbol">€</div>
+              </div>
+              <strong>35.00</strong>
+              <small>Yedek başlangıç kuru</small>
+            </div>
+            <div class="rate-card">
+              <div class="rate-headline">
+                <span>GBP</span>
+                <div class="rate-symbol">£</div>
+              </div>
+              <strong>41.00</strong>
+              <small>Yedek başlangıç kuru</small>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="hero" id="anasayfa">
+      <div class="container hero-grid">
+        <article class="hero-copy">
+          <span class="eyebrow" data-i18n="hero_eyebrow">AI Destekli Kişisel Finans Asistanı</span>
+          <h1 data-i18n="hero_title">Finans panelin hazır.</h1>
+          <p class="lead" data-i18n="hero_lead">
+            Burası tanıtım alanı değil, doğrudan kullanım ekranın. Profilini güncelle, gelir ve gider ekle,
+            grafik görünümünü değiştir ve bütçenin bu ay nasıl ilerlediğini canlı olarak takip et.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#kurulum" data-i18n="hero_cta_primary">Veri Girmeye Başla</a>
+            <a class="button secondary" href="#profil" data-i18n="hero_cta_secondary">Profil Alanını Gör</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="mini-card">
+              <strong>%18</strong>
+              <p data-i18n="hero_stat_1">Yemek harcamasında artış tespiti</p>
+            </div>
+            <div class="mini-card">
+              <strong>4.2 sn</strong>
+              <p data-i18n="hero_stat_2">Aylık finans özeti üretim süresi</p>
+            </div>
+            <div class="mini-card">
+              <strong>7/24</strong>
+              <p data-i18n="hero_stat_3">Doğal dilde soru-cevap desteği</p>
+            </div>
+          </div>
+
+          <span class="spark one" aria-hidden="true"></span>
+          <span class="spark two" aria-hidden="true"></span>
+        </article>
+
+        <aside class="hero-panel" aria-label="Ürün önizleme paneli">
+          <div class="dashboard-card">
+            <div class="dashboard-head">
+              <div>
+                <strong data-i18n="hero_panel_title">Bu Ayki Finans Durumu</strong>
+                <span id="hero-period" data-i18n="hero_period_default">Bu ay</span>
+              </div>
+              <div class="dashboard-tools">
+                <label for="chart-type" data-i18n="chart_type_label">Grafik türü</label>
+                <select id="chart-type">
+                  <option value="bar" data-i18n="chart_bar">Çubuk</option>
+                  <option value="donut" data-i18n="chart_donut">Dairesel</option>
+                  <option value="category" data-i18n="chart_category">Kategori dağılımı</option>
+                </select>
+              </div>
+            </div>
+            <div class="balance" id="hero-balance">₺0</div>
+            <div class="graph-panel">
+              <div class="graph-view active" id="graph-view-bar">
+                <div class="graph" aria-hidden="true" id="hero-graph">
+                  <div class="bar" data-bar="income" style="height: 24%;"></div>
+                  <div class="bar" data-bar="expense" style="height: 18%;"></div>
+                  <div class="bar active" data-bar="remaining" style="height: 22%;"></div>
+                  <div class="bar" data-bar="budget" style="height: 20%;"></div>
+                  <div class="bar" data-bar="savings" style="height: 16%;"></div>
+                  <div class="bar" data-bar="count" style="height: 10%;"></div>
+                </div>
+                <div class="graph-labels">
+                  <span data-i18n="graph_income">Gelir</span>
+                  <span data-i18n="graph_expense">Gider</span>
+                  <span data-i18n="graph_remaining">Kalan</span>
+                  <span data-i18n="graph_limit">Limit</span>
+                  <span data-i18n="graph_goal">Hedef</span>
+                  <span data-i18n="graph_count">Kayıt</span>
+                </div>
+              </div>
+
+              <div class="graph-view" id="graph-view-donut">
+                <div class="donut-wrap">
+                  <div class="donut-chart" id="donut-chart">
+                    <div class="donut-center" id="donut-center">Veri yok</div>
+                  </div>
+                  <div class="donut-legend" id="donut-legend">
+                    <div class="empty-state">Kategori dağılımı için gider kaydı ekle.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="graph-view" id="graph-view-category">
+                <div class="category-breakdown" id="category-breakdown">
+                  <div class="empty-state">Kategori bazlı görünüm için gider ekle.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card">
+            <div class="analysis-head">
+              <span class="analysis-badge" data-i18n="analysis_badge">AI Analizi</span>
+              <span>Dolmacı AI</span>
+            </div>
+            <h3 id="hero-analysis-title">Profilini oluşturduğunda finans görünümün burada canlanacak.</h3>
+            <p id="hero-analysis-body">
+              Gelir, gider ve bütçe verilerini girdikçe bu alan senin gerçek durumuna göre güncellenecek.
+            </p>
+
+            <div class="data-list">
+              <div class="data-row">
+                <span data-i18n="top_category_label">En yüksek kategori</span>
+                <strong id="hero-top-category">Henüz yok</strong>
+              </div>
+              <div class="data-row">
+                <span data-i18n="saving_suggestion_label">Tasarruf önerisi</span>
+                <strong id="hero-saving-potential">₺0</strong>
+              </div>
+              <div class="data-row">
+                <span data-i18n="budget_risk_label">Bütçe riski</span>
+                <strong id="hero-risk-level">Başlangıç</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="profil">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="profile_section_title">Kişisel harcama profilin</h2>
+            <p class="section-intro" data-i18n="profile_section_intro">
+              Bu alan senin finans düzenini kişiselleştirmek için tasarlandı. Kendi profilini oluşturup bütçe yapını,
+              önceliklerini ve alışkanlıklarını tek yerde görebilirsin.
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-showcase">
+          <article class="profile-hero-card">
+            <div class="profile-hero-top">
+              <div>
+                <span data-i18n="profile_visual_label">Kişisel finans görünümü</span>
+                <h3 data-i18n="profile_visual_title">Profilin uygulamanın geri kalanını şekillendirir.</h3>
+              </div>
+              <span class="profile-badge" data-i18n="profile_mode_badge">Kişisel Mod</span>
+            </div>
+            <p data-i18n="profile_visual_text">
+              Dolmacı Finans seni tek tip kullanıcı gibi ele almaz. Gelir düzenin, bütçe sınırın, tasarruf hedefin
+              ve öne çıkan kategori tercihlerin bir araya gelerek tamamen sana ait bir finans profili oluşturur.
+            </p>
+
+            <div class="profile-meter">
+              <div class="meter-meta">
+                <span data-i18n="profile_meter_left">Profil tamamlama hissi</span>
+                <strong data-i18n="profile_meter_right">Güçlü başlangıç</strong>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill"></div>
+              </div>
+              <div class="meter-meta">
+                <span data-i18n="profile_meter_bottom_left">Bütçe + kategori + hedef</span>
+                <span data-i18n="profile_meter_bottom_right">AI yorumları için hazır altyapı</span>
+              </div>
+            </div>
+
+            <div class="profile-chip-grid">
+              <span class="profile-chip" data-i18n="profile_chip_1">Aylık limit tanımı</span>
+              <span class="profile-chip" data-i18n="profile_chip_2">Tasarruf hedefi</span>
+              <span class="profile-chip" data-i18n="profile_chip_3">Öncelikli kategori</span>
+              <span class="profile-chip" data-i18n="profile_chip_4">Tarza göre yorum</span>
+            </div>
+          </article>
+
+          <div class="profile-side">
+            <article class="profile-detail-card">
+              <h3 data-i18n="profile_why_title">Bu bölüm neden önemli?</h3>
+              <p data-i18n="profile_why_text">
+                Profil alanı doldurulduğunda grafikler, AI notları ve bütçe risk uyarıları daha anlamlı hale gelir.
+                Yani burası sadece ayar ekranı değil, uygulamanın kişiselleştirme merkezi.
+              </p>
+              <div class="detail-points">
+                <span data-i18n="profile_why_point_1">Gelir ve limit verisi sayesinde “kalan alan” hesabı doğru oluşur.</span>
+                <span data-i18n="profile_why_point_2">Öncelikli kategori seçimi, hangi harcamayı daha sık izlemen gerektiğini öne çıkarır.</span>
+                <span data-i18n="profile_why_point_3">Para yönetim tarzı, gelecekte öneri tonunu daha kişisel hale getirebilir.</span>
+              </div>
+            </article>
+
+            <article class="profile-detail-card">
+              <h3 data-i18n="profile_examples_title">Örnek profil senaryoları</h3>
+              <div class="persona-grid">
+                <div class="persona-card">
+                  <strong data-i18n="persona_1_title">Kontrollü profil</strong>
+                  <span data-i18n="persona_1_text">Harcama limiti net olan ve risk yükseldiğinde hızlı uyarı almak isteyen kullanım tarzı.</span>
+                </div>
+                <div class="persona-card">
+                  <strong data-i18n="persona_2_title">Biriktiren profil</strong>
+                  <span data-i18n="persona_2_text">Tasarruf hedefini öne koyan ve gereksiz giderleri daha hızlı fark etmek isteyen yapı.</span>
+                </div>
+                <div class="persona-card">
+                  <strong data-i18n="persona_3_title">Esnek profil</strong>
+                  <span data-i18n="persona_3_text">Gelir-gider akışı değişken olsa da kategorileri düzenli izlemek isteyen kullanıcı tipi.</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kurulum">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="setup_section_title">Profil kurulumu ve veri girişi</h2>
+            <p class="section-intro" data-i18n="setup_section_intro">
+              Buradan kendi profilini oluşturabilir, aylık bütçeni tanımlayabilir ve harcama kayıtlarını doğrudan sayfa üstünde tutabilirsin.
+            </p>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <article class="workspace-card">
+            <h3 data-i18n="profile_form_title">Profil bilgilerini gir</h3>
+            <p data-i18n="profile_form_intro">Kendi finans profilin oluşturulduğunda analizler sana göre şekillenir.</p>
+            <div class="setup-intro">
+              <strong data-i18n="setup_intro_title">Bu alan ne işe yarıyor?</strong>
+              <div class="setup-points">
+                <span data-i18n="setup_point_1">Adını ve finans tarzını belirleyerek uygulamayı kendine göre kişiselleştirirsin.</span>
+                <span data-i18n="setup_point_2">Aylık limit ve tasarruf hedefi, AI özetlerinin daha doğru çalışmasını sağlar.</span>
+                <span data-i18n="setup_point_3">Öncelikli kategori seçimi, hangi harcama alanına daha yakından bakmak istediğini gösterir.</span>
+              </div>
+            </div>
+            <form class="form-grid" id="profile-form">
+              <section class="form-section">
+                <div class="form-section-header">
+                  <h4 data-i18n="profile_step_1_title">1. Temel bilgiler</h4>
+                  <p data-i18n="profile_step_1_text">Önce seni tanıyalım. Bu bilgiler profil özetinde ve kişisel yorumlarda kullanılacak.</p>
+                </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="profile-name" data-i18n="profile_name_label">Adın</label>
+                    <input id="profile-name" name="name" type="text" placeholder="Örn. Hasan" data-i18n-placeholder="profile_name_placeholder" required>
+                    <p class="field-hint" data-i18n="profile_name_hint">Bu isim profil kartında görünecek.</p>
+                  </div>
+                  <div class="field">
+                    <label for="profile-style" data-i18n="profile_style_label">Para yönetim tarzın</label>
+                    <select id="profile-style" name="style">
+                      <option value="Dengeli">Dengeli</option>
+                      <option value="Biriktiren">Biriktiren</option>
+                      <option value="Esnek">Esnek</option>
+                      <option value="Kontrollü">Kontrollü</option>
+                    </select>
+                    <p class="field-hint" data-i18n="profile_style_hint">Harcamaya yaklaşımını en iyi anlatan tarzı seç.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="form-section">
+                <div class="form-section-header">
+                  <h4 data-i18n="profile_step_2_title">2. Bütçe planın</h4>
+                  <p data-i18n="profile_step_2_text">Bu alan aylık finans çerçeveni belirler. Grafikler ve durum kartları buna göre oluşur.</p>
+                </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="profile-income" data-i18n="profile_income_label">Aylık gelir</label>
+                    <input id="profile-income" name="income" type="number" min="0" step="100" placeholder="35000" required>
+                    <p class="field-hint" data-i18n="profile_income_hint">Düzenli aylık toplam gelirini yaz.</p>
+                  </div>
+                  <div class="field">
+                    <label for="profile-budget" data-i18n="profile_budget_label">Aylık harcama limiti</label>
+                    <input id="profile-budget" name="budget" type="number" min="0" step="100" placeholder="22000" required>
+                    <p class="field-hint" data-i18n="profile_budget_hint">Bu ay aşmamayı hedeflediğin toplam gider limiti.</p>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="profile-currency" data-i18n="profile_currency_label">Ana para birimi</label>
+                    <select id="profile-currency" name="baseCurrency">
+                      <option value="TRY">Türk Lirası (TRY)</option>
+                      <option value="USD">Amerikan Doları (USD)</option>
+                      <option value="EUR">Euro (EUR)</option>
+                      <option value="GBP">Sterlin (GBP)</option>
+                    </select>
+                    <p class="field-hint" data-i18n="profile_currency_hint">Toplamlar ve grafikler bu para birimine çevrilerek hesaplanır.</p>
+                  </div>
+                  <div class="field">
+                    <label for="profile-savings" data-i18n="profile_savings_label">Tasarruf hedefi</label>
+                    <input id="profile-savings" name="savings" type="number" min="0" step="100" placeholder="8000">
+                    <p class="field-hint" data-i18n="profile_savings_hint">Ay sonunda kenara ayırmak istediğin tutar.</p>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="profile-focus" data-i18n="profile_focus_label">Öncelikli kategori</label>
+                    <select id="profile-focus" name="focus"></select>
+                    <p class="field-hint" data-i18n="profile_focus_hint">En yakından takip etmek istediğin harcama alanı.</p>
+                  </div>
+                </div>
+
+                <div class="budget-note" data-i18n="budget_hint_text">Aylık limit ve tasarruf hedefi birlikte girildiğinde kalan bütçe ve risk kartları daha sağlıklı görünür.</div>
+              </section>
+
+              <section class="form-section">
+                <div class="form-section-header">
+                  <h4 data-i18n="profile_step_3_title">3. Kategori tercihleri</h4>
+                  <p data-i18n="profile_step_3_text">Hazır kategoriler yetmezse kendi finans düzenine uygun yeni kategoriler ekleyebilirsin.</p>
+                </div>
+                <div class="field">
+                  <label for="category-name" data-i18n="category_add_label">Kendi kategorini ekle</label>
+                  <div class="inline-form">
+                    <input id="category-name" type="text" placeholder="Örn. Sağlık veya Eğitim" data-i18n-placeholder="category_add_placeholder">
+                    <button class="button secondary submit" id="add-category-button" type="button" data-i18n="category_add_button">Kategori Ekle</button>
+                  </div>
+                  <p class="field-hint" data-i18n="category_add_hint">Eklediğin kategori işlem formunda anında kullanılabilir hale gelir.</p>
+                </div>
+                <div class="tag-list" id="category-list"></div>
+              </section>
+
+              <div class="form-actions">
+                <button class="button primary submit" type="submit" data-i18n="save_profile_button">Profili Kaydet</button>
+                <button class="button danger submit" id="reset-data-button" type="button" data-i18n="reset_all_button">Tüm Verileri Sil</button>
+              </div>
+            </form>
+
+            <div class="profile-preview">
+              <h4 data-i18n="live_profile_summary">Canlı profil özeti</h4>
+              <div class="preview-name" id="summary-name" data-i18n="not_created_yet">Henüz oluşturulmadı</div>
+              <div class="preview-grid">
+                <div class="preview-pill">
+                  <span data-i18n="summary_style_label">Tarz</span>
+                  <strong id="summary-style">Dengeli</strong>
+                </div>
+                <div class="preview-pill">
+                  <span data-i18n="summary_focus_label">Öncelik</span>
+                  <strong id="preview-focus">Market</strong>
+                </div>
+                <div class="preview-pill">
+                  <span data-i18n="summary_budget_label">Harcama limiti</span>
+                  <strong id="summary-budget">₺0</strong>
+                </div>
+                <div class="preview-pill">
+                  <span data-i18n="summary_savings_label">Tasarruf hedefi</span>
+                  <strong id="summary-savings">₺0</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="workspace-card">
+            <h3 data-i18n="entry_form_title">Harcama veya gelir ekle</h3>
+            <p data-i18n="entry_form_intro">Eklediğin kayıtlar alttaki listede görünür ve özet alanını anında etkiler.</p>
+            <form class="form-grid" id="entry-form">
+              <div class="field-row">
+                <div class="field">
+                  <label for="entry-title" data-i18n="entry_title_label">İşlem adı</label>
+                  <input id="entry-title" name="title" type="text" placeholder="Örn. Market alışverişi" data-i18n-placeholder="entry_title_placeholder" required>
+                </div>
+                <div class="field">
+                  <label for="entry-type" data-i18n="entry_type_label">İşlem tipi</label>
+                  <select id="entry-type" name="type">
+                    <option value="expense" data-i18n="entry_type_expense">Gider</option>
+                    <option value="income" data-i18n="entry_type_income">Gelir</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="entry-category" data-i18n="entry_category_label">Kategori</label>
+                  <select id="entry-category" name="category"></select>
+                </div>
+                <div class="field">
+                  <label for="entry-amount" data-i18n="entry_amount_label">Tutar</label>
+                  <input id="entry-amount" name="amount" type="number" min="0" step="1" placeholder="850" required>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="entry-currency" data-i18n="entry_currency_label">Para birimi</label>
+                  <select id="entry-currency" name="currency">
+                    <option value="TRY">Türk Lirası (TRY)</option>
+                    <option value="USD">Amerikan Doları (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                    <option value="GBP">Sterlin (GBP)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="entry-date" data-i18n="entry_date_label">Tarih</label>
+                  <input id="entry-date" name="date" type="date" required>
+                </div>
+              </div>
+
+              <button class="button primary submit" id="entry-submit-button" type="submit" data-i18n="entry_add_button">Kayıt Ekle</button>
+            </form>
+
+            <div class="summary-grid">
+              <div class="summary-card">
+                <span data-i18n="summary_income_label">Toplam gelir</span>
+                <strong id="summary-income">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="summary_expense_label">Toplam gider</span>
+                <strong id="summary-expense">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="summary_remaining_label">Kalan bütçe</span>
+                <strong id="summary-remaining">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="summary_count_label">Toplam kayıt</span>
+                <strong id="summary-count">0</strong>
+              </div>
+            </div>
+
+            <div class="ai-note">
+              <strong data-i18n="ai_note_title">Dolmacı AI notu</strong>
+              <span id="ai-note-text">Profilini oluşturduktan ve birkaç kayıt ekledikten sonra burada kişisel özetini göreceksin.</span>
+            </div>
+
+            <div class="rate-status" id="rate-status">
+              <strong data-i18n="rate_status_label">Kur durumu:</strong> <span data-i18n="rate_status_checking">Güncel kurlar kontrol ediliyor.</span>
+            </div>
+
+            <div class="entry-toolbar">
+              <div class="entry-toolbar-group">
+                <button class="button secondary" id="export-csv-button" type="button" data-i18n="export_csv_button">CSV Dışa Aktar</button>
+                <button class="button secondary" id="export-json-button" type="button" data-i18n="export_json_button">JSON Yedekle</button>
+                <button class="button secondary" id="import-json-button" type="button" data-i18n="import_json_button">Yedeği Geri Yükle</button>
+                <input id="import-json-input" type="file" accept="application/json" hidden>
+              </div>
+              <span class="helper-note" id="entry-toolbar-note" data-i18n="toolbar_note">Kayıtlarını düzenleyebilir, silebilir veya yedekleyebilirsin.</span>
+            </div>
+
+            <div class="entry-list" id="entry-list">
+              <div class="empty-state" data-i18n="empty_entries">Henüz kayıt eklenmedi. İlk gelir veya giderini ekleyerek başla.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="yatirim">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="investment_section_title">Yatırım modülü</h2>
+            <p class="section-intro" data-i18n="investment_section_intro">
+              Burada Midas benzeri bir yatırım görünümüyle portföyünü manuel olarak takip edebilirsin.
+            </p>
+          </div>
+        </div>
+
+        <div class="investment-grid">
+          <article class="workspace-card">
+            <h3 data-i18n="investment_form_title">Yatırım ekle</h3>
+            <p data-i18n="investment_form_intro">Hisse veya yatırım kalemlerini ekleyip toplam değer ve kâr/zarar durumunu görebilirsin.</p>
+
+            <form class="form-grid" id="investment-form">
+              <div class="field-row">
+                <div class="field">
+                  <label for="investment-symbol" data-i18n="investment_symbol_label">Varlık kodu</label>
+                  <input id="investment-symbol" name="symbol" type="text" placeholder="Örn. THYAO veya AAPL" data-i18n-placeholder="investment_symbol_placeholder" required>
+                </div>
+                <div class="field">
+                  <label for="investment-name" data-i18n="investment_name_label">Varlık adı</label>
+                  <input id="investment-name" name="name" type="text" placeholder="Örn. Türk Hava Yolları" data-i18n-placeholder="investment_name_placeholder" required>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="investment-lot" data-i18n="investment_lot_label">Adet / Lot</label>
+                  <input id="investment-lot" name="lot" type="number" min="0" step="0.01" placeholder="10" required>
+                </div>
+                <div class="field">
+                  <label for="investment-buy-price" data-i18n="investment_buy_label">Alış fiyatı</label>
+                  <input id="investment-buy-price" name="buyPrice" type="number" min="0" step="0.01" placeholder="245.50" required>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="investment-current-price" data-i18n="investment_current_label">Güncel fiyat</label>
+                  <input id="investment-current-price" name="currentPrice" type="number" min="0" step="0.01" placeholder="268.40" required>
+                </div>
+                <div class="field">
+                  <label for="investment-market" data-i18n="investment_market_label">Piyasa</label>
+                  <select id="investment-market" name="market">
+                    <option value="BIST">BIST</option>
+                    <option value="NASDAQ">NASDAQ</option>
+                    <option value="NYSE">NYSE</option>
+                    <option value="ALTIN">Altın</option>
+                    <option value="KRIPTO">Kripto</option>
+                  </select>
+                </div>
+              </div>
+
+              <button class="button primary submit" id="investment-submit-button" type="submit" data-i18n="investment_add_button">Yatırım Ekle</button>
+            </form>
+          </article>
+
+          <article class="workspace-card">
+            <h3 data-i18n="investment_portfolio_title">Portföy görünümü</h3>
+            <p data-i18n="investment_portfolio_intro">Toplam portföy değeri, maliyet ve kâr/zarar durumun burada görünür.</p>
+
+            <div class="summary-grid">
+              <div class="summary-card">
+                <span data-i18n="investment_total_value">Toplam portföy değeri</span>
+                <strong id="investment-total-value">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="investment_total_cost">Toplam maliyet</span>
+                <strong id="investment-total-cost">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="investment_total_profit">Toplam kâr/zarar</span>
+                <strong id="investment-total-profit">₺0</strong>
+              </div>
+              <div class="summary-card">
+                <span data-i18n="investment_total_count">Toplam varlık</span>
+                <strong id="investment-total-count">0</strong>
+              </div>
+            </div>
+
+            <div class="investment-list" id="investment-list">
+              <div class="empty-state" data-i18n="investment_empty">Henüz yatırım eklenmedi. İlk portföy kalemini ekleyerek başla.</div>
+            </div>
+
+            <div class="investment-watchlist">
+              <div class="watchlist-header">
+                <div>
+                  <h4 id="investment-watchlist-title">Canlı yatırım listesi</h4>
+                  <p id="investment-watchlist-intro">Döviz ve altın tarafı canlı kur verisiyle, portföy kalemlerin ise güncel giriş fiyatınla görünür.</p>
+                </div>
+              </div>
+              <div class="watchlist-grid" id="investment-watchlist">
+                <div class="empty-state">İzleme listesi hazırlanıyor.</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="basla">
+      <div class="container">
+        <article class="cta-panel">
+          <div>
+            <h2 data-i18n="back_panel_title">Tanıtım sayfasına dönmek istersen hazır.</h2>
+            <p data-i18n="back_panel_text">
+              Bu ekran artık doğrudan kullanım için ayrıldı. Ürünün anlatım kısmını tekrar görmek istersen ana sayfaya dönebilirsin.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <a class="button primary" href="index.html" data-i18n="back_to_intro_button">Tanıtıma Dön</a>
+            <a class="button secondary" href="#anasayfa" data-i18n="back_to_top_button">Yukarı Dön</a>
+          </div>
+        </article>
+      </div>
+    </section>
+      </main>
+
+      <footer>
+        <div class="container footer-card">
+          <span data-i18n="footer_left">Dolmacı Finans kişisel kullanım arayüzü</span>
+          <span data-i18n="footer_right">AI destekli kişisel finans asistanın</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const currencyFormatter = new Intl.NumberFormat("tr-TR", {
+      style: "currency",
+      currency: "TRY",
+      maximumFractionDigits: 0
+    });
+    const storageKey = "dolmaci-finans-data";
+    const todayString = new Date().toISOString().split("T")[0];
+    let exchangeRatesToTry = {
+      TRY: 1,
+      USD: 32,
+      EUR: 35,
+      GBP: 41,
+      XAU: 2450
+    };
+    let rateTrends = {
+      TRY: [1],
+      USD: [32],
+      EUR: [35],
+      GBP: [41],
+      XAU: [2450]
+    };
+    let rateHistory = {};
+    const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
+    const profileForm = document.querySelector("#profile-form");
+    const entryForm = document.querySelector("#entry-form");
+    const investmentForm = document.querySelector("#investment-form");
+    const entryDateInput = document.querySelector("#entry-date");
+    const entryCurrencySelect = document.querySelector("#entry-currency");
+    const entryList = document.querySelector("#entry-list");
+    const rateStatus = document.querySelector("#rate-status");
+    const rateGrid = document.querySelector("#rate-grid");
+    const refreshRatesButton = document.querySelector("#refresh-rates-button");
+    const ratesBaseSelect = document.querySelector("#rates-base-select");
+    const rateUpdatedLabel = document.querySelector("#rate-updated-label");
+    const settingsToggle = document.querySelector("#settings-toggle");
+    const sidebarSettingsPanel = document.querySelector("#sidebar-settings-panel");
+    const languageSelect = document.querySelector("#language-select");
+    const themeSelect = document.querySelector("#theme-select");
+    const dashboardSearchInput = document.querySelector("#dashboard-search");
+    const dashboardSearchButton = document.querySelector("#dashboard-search-button");
+    const searchSuggestions = document.querySelector("#search-suggestions");
+    const entrySubmitButton = document.querySelector("#entry-submit-button");
+    const exportCsvButton = document.querySelector("#export-csv-button");
+    const exportJsonButton = document.querySelector("#export-json-button");
+    const importJsonButton = document.querySelector("#import-json-button");
+    const importJsonInput = document.querySelector("#import-json-input");
+    const entryToolbarNote = document.querySelector("#entry-toolbar-note");
+    const investmentSubmitButton = document.querySelector("#investment-submit-button");
+    const investmentList = document.querySelector("#investment-list");
+    const investmentWatchlist = document.querySelector("#investment-watchlist");
+    const investmentWatchlistTitle = document.querySelector("#investment-watchlist-title");
+    const investmentWatchlistIntro = document.querySelector("#investment-watchlist-intro");
+    const investmentTotalValue = document.querySelector("#investment-total-value");
+    const investmentTotalCost = document.querySelector("#investment-total-cost");
+    const investmentTotalProfit = document.querySelector("#investment-total-profit");
+    const investmentTotalCount = document.querySelector("#investment-total-count");
+    const heroBalance = document.querySelector("#hero-balance");
+    const heroAnalysisTitle = document.querySelector("#hero-analysis-title");
+    const heroAnalysisBody = document.querySelector("#hero-analysis-body");
+    const heroTopCategory = document.querySelector("#hero-top-category");
+    const heroSavingPotential = document.querySelector("#hero-saving-potential");
+    const heroRiskLevel = document.querySelector("#hero-risk-level");
+    const heroPeriod = document.querySelector("#hero-period");
+    const chartTypeSelect = document.querySelector("#chart-type");
+    const donutChart = document.querySelector("#donut-chart");
+    const donutCenter = document.querySelector("#donut-center");
+    const donutLegend = document.querySelector("#donut-legend");
+    const categoryBreakdown = document.querySelector("#category-breakdown");
+    const graphViews = {
+      bar: document.querySelector("#graph-view-bar"),
+      donut: document.querySelector("#graph-view-donut"),
+      category: document.querySelector("#graph-view-category")
+    };
+    const heroBars = {
+      income: document.querySelector('[data-bar="income"]'),
+      expense: document.querySelector('[data-bar="expense"]'),
+      remaining: document.querySelector('[data-bar="remaining"]'),
+      budget: document.querySelector('[data-bar="budget"]'),
+      savings: document.querySelector('[data-bar="savings"]'),
+      count: document.querySelector('[data-bar="count"]')
+    };
+    const profileFocusSelect = document.querySelector("#profile-focus");
+    const entryCategorySelect = document.querySelector("#entry-category");
+    const categoryList = document.querySelector("#category-list");
+    const categoryNameInput = document.querySelector("#category-name");
+    const addCategoryButton = document.querySelector("#add-category-button");
+    const resetDataButton = document.querySelector("#reset-data-button");
+    const defaultCategories = [
+      "Market",
+      "Ulaşım",
+      "Yemek",
+      "Faturalar",
+      "Eğlence",
+      "Abonelik",
+      "Maaş",
+      "Ek gelir"
+    ];
+    const categoryColorMap = {
+      "Market": "#4f8f5b",
+      "Ulaşım": "#3f7ad9",
+      "Yemek": "#d96c3f",
+      "Faturalar": "#8a5bd1",
+      "Eğlence": "#d64f7f",
+      "Abonelik": "#b88b2d",
+      "Maaş": "#2f7d57",
+      "Ek gelir": "#1ea672"
+    };
+
+    const profileState = {
+      name: "",
+      style: "Dengeli",
+      income: 0,
+      budget: 0,
+      savings: 0,
+      focus: "Market",
+      chartType: "bar",
+      baseCurrency: "TRY",
+      ratesBase: "TRY",
+      language: "tr",
+      theme: "light"
+    };
+
+    const translations = {
+      tr: {
+        nav_dashboard: "Dashboard",
+        nav_rates: "Canlı Kur",
+        nav_profile: "Profil",
+        nav_transactions: "İşlemler",
+        investment_section_title: "Yatırım modülü",
+        investment_section_intro: "Burada Midas benzeri bir yatırım görünümüyle portföyünü manuel olarak takip edebilirsin.",
+        investment_form_title: "Yatırım ekle",
+        investment_form_intro: "Hisse veya yatırım kalemlerini ekleyip toplam değer ve kâr/zarar durumunu görebilirsin.",
+        investment_symbol_label: "Varlık kodu",
+        investment_symbol_placeholder: "Örn. THYAO veya AAPL",
+        investment_name_label: "Varlık adı",
+        investment_name_placeholder: "Örn. Türk Hava Yolları",
+        investment_lot_label: "Adet / Lot",
+        investment_buy_label: "Alış fiyatı",
+        investment_current_label: "Güncel fiyat",
+        investment_market_label: "Piyasa",
+        investment_add_button: "Yatırım Ekle",
+        investment_portfolio_title: "Portföy görünümü",
+        investment_portfolio_intro: "Toplam portföy değeri, maliyet ve kâr/zarar durumun burada görünür.",
+        investment_total_value: "Toplam portföy değeri",
+        investment_total_cost: "Toplam maliyet",
+        investment_total_profit: "Toplam kâr/zarar",
+        investment_total_count: "Toplam varlık",
+        investment_empty: "Henüz yatırım eklenmedi. İlk portföy kalemini ekleyerek başla.",
+        nav_settings: "Ayarlar",
+        nav_data_entry: "Veri Girişi",
+        nav_help: "Yardım",
+        nav_back: "Tanıtıma Dön",
+        promo_title: "Akıllı Finans Alanın",
+        promo_text: "Profilini, kurlarını ve harcama akışını tek yerden yönet. Bu alanı zamanla daha da güçlü bir dashboard’a çevirebiliriz.",
+        quick_action: "Hızlı Kayıt",
+        exit_link: "Çıkış / Tanıtım",
+        top_title: "Hoş geldin, finans panelin hazır.",
+        top_text: "Profil, canlı kur, grafikler ve harcama kayıtların tek akışta burada.",
+        search_placeholder: "Bir şey ara...",
+        search_button: "Ara",
+        rates_panel: "Kur Paneli",
+        new_transaction: "Yeni İşlem",
+        rates_title: "Canlı Kur",
+        rates_text: "Uygulamanın kullandığı güncel döviz karşılıklarını buradan anlık takip edebilirsin.",
+        rate_updated_waiting: "Son güncelleme: Bekleniyor",
+        add_transaction: "İşlem Ekle",
+        refresh_rates: "Kurları Yenile",
+        hero_eyebrow: "AI Destekli Kişisel Finans Asistanı",
+        hero_title: "Finans panelin hazır.",
+        hero_lead: "Burası tanıtım alanı değil, doğrudan kullanım ekranın. Profilini güncelle, gelir ve gider ekle, grafik görünümünü değiştir ve bütçenin bu ay nasıl ilerlediğini canlı olarak takip et.",
+        hero_cta_primary: "Veri Girmeye Başla",
+        hero_cta_secondary: "Profil Alanını Gör",
+        hero_stat_1: "Yemek harcamasında artış tespiti",
+        hero_stat_2: "Aylık finans özeti üretim süresi",
+        hero_stat_3: "Doğal dilde soru-cevap desteği",
+        hero_panel_title: "Bu Ayki Finans Durumu",
+        hero_period_default: "Bu ay",
+        chart_type_label: "Grafik türü",
+        chart_bar: "Çubuk",
+        chart_donut: "Dairesel",
+        chart_category: "Kategori dağılımı",
+        graph_income: "Gelir",
+        graph_expense: "Gider",
+        graph_remaining: "Kalan",
+        graph_limit: "Limit",
+        graph_goal: "Hedef",
+        graph_count: "Kayıt",
+        analysis_badge: "AI Analizi",
+        top_category_label: "En yüksek kategori",
+        saving_suggestion_label: "Tasarruf önerisi",
+        budget_risk_label: "Bütçe riski",
+        profile_section_title: "Kişisel harcama profilin",
+        profile_section_intro: "Bu alan senin finans düzenini kişiselleştirmek için tasarlandı. Kendi profilini oluşturup bütçe yapını, önceliklerini ve alışkanlıklarını tek yerde görebilirsin.",
+        profile_visual_label: "Kişisel finans görünümü",
+        profile_visual_title: "Profilin uygulamanın geri kalanını şekillendirir.",
+        profile_mode_badge: "Kişisel Mod",
+        profile_visual_text: "Dolmacı Finans seni tek tip kullanıcı gibi ele almaz. Gelir düzenin, bütçe sınırın, tasarruf hedefin ve öne çıkan kategori tercihlerin bir araya gelerek tamamen sana ait bir finans profili oluşturur.",
+        profile_meter_left: "Profil tamamlama hissi",
+        profile_meter_right: "Güçlü başlangıç",
+        profile_meter_bottom_left: "Bütçe + kategori + hedef",
+        profile_meter_bottom_right: "AI yorumları için hazır altyapı",
+        profile_chip_1: "Aylık limit tanımı",
+        profile_chip_2: "Tasarruf hedefi",
+        profile_chip_3: "Öncelikli kategori",
+        profile_chip_4: "Tarza göre yorum",
+        profile_why_title: "Bu bölüm neden önemli?",
+        profile_why_text: "Profil alanı doldurulduğunda grafikler, AI notları ve bütçe risk uyarıları daha anlamlı hale gelir. Yani burası sadece ayar ekranı değil, uygulamanın kişiselleştirme merkezi.",
+        profile_why_point_1: "Gelir ve limit verisi sayesinde “kalan alan” hesabı doğru oluşur.",
+        profile_why_point_2: "Öncelikli kategori seçimi, hangi harcamayı daha sık izlemen gerektiğini öne çıkarır.",
+        profile_why_point_3: "Para yönetim tarzı, gelecekte öneri tonunu daha kişisel hale getirebilir.",
+        profile_examples_title: "Örnek profil senaryoları",
+        persona_1_title: "Kontrollü profil",
+        persona_1_text: "Harcama limiti net olan ve risk yükseldiğinde hızlı uyarı almak isteyen kullanım tarzı.",
+        persona_2_title: "Biriktiren profil",
+        persona_2_text: "Tasarruf hedefini öne koyan ve gereksiz giderleri daha hızlı fark etmek isteyen yapı.",
+        persona_3_title: "Esnek profil",
+        persona_3_text: "Gelir-gider akışı değişken olsa da kategorileri düzenli izlemek isteyen kullanıcı tipi.",
+        setup_section_title: "Profil kurulumu ve veri girişi",
+        setup_section_intro: "Buradan kendi profilini oluşturabilir, aylık bütçeni tanımlayabilir ve harcama kayıtlarını doğrudan sayfa üstünde tutabilirsin.",
+        profile_form_title: "Profil bilgilerini gir",
+        profile_form_intro: "Kendi finans profilin oluşturulduğunda analizler sana göre şekillenir.",
+        setup_intro_title: "Bu alan ne işe yarıyor?",
+        setup_point_1: "Adını ve finans tarzını belirleyerek uygulamayı kendine göre kişiselleştirirsin.",
+        setup_point_2: "Aylık limit ve tasarruf hedefi, AI özetlerinin daha doğru çalışmasını sağlar.",
+        setup_point_3: "Öncelikli kategori seçimi, hangi harcama alanına daha yakından bakmak istediğini gösterir.",
+        profile_step_1_title: "1. Temel bilgiler",
+        profile_step_1_text: "Önce seni tanıyalım. Bu bilgiler profil özetinde ve kişisel yorumlarda kullanılacak.",
+        profile_name_label: "Adın",
+        profile_name_placeholder: "Örn. Hasan",
+        profile_name_hint: "Bu isim profil kartında görünecek.",
+        profile_style_label: "Para yönetim tarzın",
+        profile_style_hint: "Harcamaya yaklaşımını en iyi anlatan tarzı seç.",
+        profile_step_2_title: "2. Bütçe planın",
+        profile_step_2_text: "Bu alan aylık finans çerçeveni belirler. Grafikler ve durum kartları buna göre oluşur.",
+        profile_income_label: "Aylık gelir",
+        profile_income_hint: "Düzenli aylık toplam gelirini yaz.",
+        profile_budget_label: "Aylık harcama limiti",
+        profile_budget_hint: "Bu ay aşmamayı hedeflediğin toplam gider limiti.",
+        profile_currency_label: "Ana para birimi",
+        profile_currency_hint: "Toplamlar ve grafikler bu para birimine çevrilerek hesaplanır.",
+        profile_savings_label: "Tasarruf hedefi",
+        profile_savings_hint: "Ay sonunda kenara ayırmak istediğin tutar.",
+        profile_focus_label: "Öncelikli kategori",
+        profile_focus_hint: "En yakından takip etmek istediğin harcama alanı.",
+        profile_step_3_title: "3. Kategori tercihleri",
+        profile_step_3_text: "Hazır kategoriler yetmezse kendi finans düzenine uygun yeni kategoriler ekleyebilirsin.",
+        category_add_label: "Kendi kategorini ekle",
+        category_add_placeholder: "Örn. Sağlık veya Eğitim",
+        category_add_button: "Kategori Ekle",
+        category_add_hint: "Eklediğin kategori işlem formunda anında kullanılabilir hale gelir.",
+        save_profile_button: "Profili Kaydet",
+        reset_all_button: "Tüm Verileri Sil",
+        live_profile_summary: "Canlı profil özeti",
+        not_created_yet: "Henüz oluşturulmadı",
+        summary_style_label: "Tarz",
+        summary_focus_label: "Öncelik",
+        summary_budget_label: "Harcama limiti",
+        summary_savings_label: "Tasarruf hedefi",
+        entry_form_title: "Harcama veya gelir ekle",
+        entry_form_intro: "Eklediğin kayıtlar alttaki listede görünür ve özet alanını anında etkiler.",
+        entry_title_label: "İşlem adı",
+        entry_title_placeholder: "Örn. Market alışverişi",
+        entry_type_label: "İşlem tipi",
+        entry_type_expense: "Gider",
+        entry_type_income: "Gelir",
+        entry_category_label: "Kategori",
+        entry_amount_label: "Tutar",
+        entry_currency_label: "Para birimi",
+        entry_date_label: "Tarih",
+        entry_add_button: "Kayıt Ekle",
+        summary_income_label: "Toplam gelir",
+        summary_expense_label: "Toplam gider",
+        summary_remaining_label: "Kalan bütçe",
+        summary_count_label: "Toplam kayıt",
+        ai_note_title: "Dolmacı AI notu",
+        rate_status_label: "Kur durumu:",
+        rate_status_checking: "Güncel kurlar kontrol ediliyor.",
+        empty_entries: "Henüz kayıt eklenmedi. İlk gelir veya giderini ekleyerek başla.",
+        back_panel_title: "Tanıtım sayfasına dönmek istersen hazır.",
+        back_panel_text: "Bu ekran artık doğrudan kullanım için ayrıldı. Ürünün anlatım kısmını tekrar görmek istersen ana sayfaya dönebilirsin.",
+        back_to_intro_button: "Tanıtıma Dön",
+        back_to_top_button: "Yukarı Dön",
+        footer_left: "Dolmacı Finans kişisel kullanım arayüzü",
+        footer_right: "AI destekli kişisel finans asistanın",
+        export_csv_button: "CSV Dışa Aktar",
+        export_json_button: "JSON Yedekle",
+        import_json_button: "Yedeği Geri Yükle",
+        toolbar_note: "Kayıtlarını düzenleyebilir, silebilir veya yedekleyebilirsin.",
+        entry_edit: "Düzenle",
+        entry_delete: "Sil",
+        entry_update_button: "Kaydı Güncelle",
+        entry_add_button: "Kayıt Ekle",
+        import_error: "Yedek dosyası okunamadı.",
+        import_success: "Yedek başarıyla geri yüklendi.",
+        delete_confirm: "Bu kayıt silinsin mi?",
+        no_data: "Veri yok",
+        donut_empty: "Kategori dağılımı için gider kaydı ekle.",
+        category_empty: "Kategori bazlı görünüm için gider ekle.",
+        not_available: "Henüz yok",
+        type_income: "Gelir",
+        type_expense: "Gider",
+        search_no_results: "Aramana uygun kayıt bulunamadı. Farklı bir kelime dene.",
+        confirm_reset: "Tüm profil, kategori ve işlem verileri silinsin mi?",
+        ai_no_profile: "Profilini oluşturduktan ve birkaç kayıt ekledikten sonra burada kişisel özetini göreceksin.",
+        ai_no_entries: "{name} için henüz işlem yok. İlk kaydı eklediğinde Dolmacı AI harcama düzenini yorumlamaya başlayacak.",
+        ai_over_budget: "{name}, şu anda aylık limitinin üstündesin. Özellikle {focus} kategorisinde daha dikkatli olmak faydalı olabilir.",
+        ai_budget_warning: "{name}, harcama limitinin büyük kısmını kullandın. Ay sonuna kadar {remaining} alanın kaldı.",
+        ai_balanced: "{name}, görünüşe göre finans akışın dengeli. {focus} kategorisi şu an en yakından takip edilmesi gereken alan olarak seçili.",
+        risk_start: "Başlangıç",
+        risk_low: "Düşük",
+        risk_medium: "Orta",
+        risk_high: "Yüksek",
+        hero_title_default: "Profilini oluşturduğunda finans görünümün burada canlanacak.",
+        hero_body_default: "Gelir, gider ve bütçe verilerini girdikçe bu alan senin gerçek durumuna göre güncellenecek.",
+        hero_title_over: "Bu ay harcamaların belirlediğin bütçenin üstüne çıktı.",
+        hero_body_over: "Toplam giderin {expense} seviyesinde. Özellikle {focus} tarafında sıkılaşmak faydalı olabilir.",
+        hero_title_warn: "Bütçenin büyük kısmını kullandın.",
+        hero_body_warn: "Ay bitmeden önce elinde {remaining} alan kaldı. Yeni harcamalarda öncelikli kategorilerini takip etmek iyi olur.",
+        hero_title_good: "Bu ayki finans akışın profilinle uyumlu görünüyor.",
+        hero_body_good: "Net durumun {net}. {topCategory} kategorisi şu an en belirgin gider alanın.",
+        rate_updated_prefix: "Son güncelleme:",
+        rate_updated_loading: "Son güncelleme: Yenileniyor...",
+        rate_updated_fallback: "Son güncelleme: Yedek veri kullanılıyor",
+        rate_status_live_all: "Döviz ve altın kurları güncellendi. Son güncelleme {time}.",
+        rate_status_live_fx_only: "Döviz kurları güncellendi. Altın verisi alınamadı, son yedek değer kullanılıyor. Son güncelleme {time}.",
+        rate_status_fallback: "Canlı kura ulaşılamadı, sabit yedek kurlar kullanılıyor.",
+        rate_status_refreshing: "Kurlar yeniden güncelleniyor.",
+        rate_label_base: "Ana referans ({base})",
+        rate_label_ounce: "Referans ons değeri",
+        rate_label_gram: "24 ayar gram altın / {base}",
+        rate_label_source: "{source} · {base} bazında",
+        source_live: "Canlı kur",
+        source_backup: "Yedek kur",
+        settings_title: "Ayarlar",
+        settings_intro: "Uygulamanın görünümünü ve dilini buradan kendine göre ayarlayabilirsin.",
+        language_title: "Dil",
+        language_text: "Arayüz dilini Türkçe veya English olarak değiştirebilirsin.",
+        language_label: "Arayüz dili",
+        theme_title: "Tema",
+        theme_text: "Şu anki açık temayı veya daha koyu bir dark temayı seçebilirsin.",
+        theme_label: "Görünüm teması",
+        budget_hint_title: "Bütçe notu",
+        budget_hint_text: "Aylık limit ve tasarruf hedefi birlikte girildiğinde kalan bütçe ve risk kartları daha sağlıklı görünür."
+      },
+      en: {
+        nav_dashboard: "Dashboard",
+        nav_rates: "Live Rates",
+        nav_profile: "Profile",
+        nav_transactions: "Transactions",
+        investment_section_title: "Investment module",
+        investment_section_intro: "Here you can manually track your portfolio with a Midas-like investment view.",
+        investment_form_title: "Add investment",
+        investment_form_intro: "Add stocks or assets and see total value with profit/loss status.",
+        investment_symbol_label: "Asset code",
+        investment_symbol_placeholder: "Ex. THYAO or AAPL",
+        investment_name_label: "Asset name",
+        investment_name_placeholder: "Ex. Turkish Airlines",
+        investment_lot_label: "Units / Lots",
+        investment_buy_label: "Buy price",
+        investment_current_label: "Current price",
+        investment_market_label: "Market",
+        investment_add_button: "Add Investment",
+        investment_portfolio_title: "Portfolio view",
+        investment_portfolio_intro: "Your total portfolio value, cost and profit/loss are shown here.",
+        investment_total_value: "Total portfolio value",
+        investment_total_cost: "Total cost",
+        investment_total_profit: "Total profit/loss",
+        investment_total_count: "Total assets",
+        investment_empty: "No investments yet. Start by adding your first portfolio item.",
+        nav_settings: "Settings",
+        nav_data_entry: "Data Entry",
+        nav_help: "Help",
+        nav_back: "Back to Intro",
+        promo_title: "Your Smart Finance Space",
+        promo_text: "Manage your profile, rates, and spending flow in one place. We can turn this into an even stronger dashboard over time.",
+        quick_action: "Quick Entry",
+        exit_link: "Exit / Intro",
+        top_title: "Welcome, your finance panel is ready.",
+        top_text: "Your profile, live rates, charts, and transaction records are all here in one flow.",
+        search_placeholder: "Search anything...",
+        search_button: "Search",
+        rates_panel: "Rates Panel",
+        new_transaction: "New Transaction",
+        rates_title: "Live Rates",
+        rates_text: "You can follow the latest exchange values used by the app here in real time.",
+        rate_updated_waiting: "Last update: Waiting",
+        add_transaction: "Add Transaction",
+        refresh_rates: "Refresh Rates",
+        hero_eyebrow: "AI Powered Personal Finance Assistant",
+        hero_title: "Your finance panel is ready.",
+        hero_lead: "This is not a promo section, it is your actual usage screen. Update your profile, add income and expenses, change the chart view, and follow how your budget is progressing this month live.",
+        hero_cta_primary: "Start Entering Data",
+        hero_cta_secondary: "See Profile Area",
+        hero_stat_1: "Food spending increase detected",
+        hero_stat_2: "Monthly finance summary generation time",
+        hero_stat_3: "24/7 natural language Q&A support",
+        hero_panel_title: "This Month's Financial Status",
+        hero_period_default: "This month",
+        chart_type_label: "Chart type",
+        chart_bar: "Bar",
+        chart_donut: "Donut",
+        chart_category: "Category breakdown",
+        graph_income: "Income",
+        graph_expense: "Expense",
+        graph_remaining: "Left",
+        graph_limit: "Limit",
+        graph_goal: "Goal",
+        graph_count: "Entries",
+        analysis_badge: "AI Analysis",
+        top_category_label: "Top category",
+        saving_suggestion_label: "Saving suggestion",
+        budget_risk_label: "Budget risk",
+        profile_section_title: "Your personal spending profile",
+        profile_section_intro: "This area is designed to personalize your finance flow. You can create your own profile and see your budget structure, priorities, and habits in one place.",
+        profile_visual_label: "Personal finance view",
+        profile_visual_title: "Your profile shapes the rest of the app.",
+        profile_mode_badge: "Personal Mode",
+        profile_visual_text: "Dolmacı Finans does not treat you like a generic user. Your income pattern, budget cap, savings goal, and category priorities come together to build a finance profile that is truly yours.",
+        profile_meter_left: "Profile completion feel",
+        profile_meter_right: "Strong start",
+        profile_meter_bottom_left: "Budget + category + goal",
+        profile_meter_bottom_right: "Ready base for AI insights",
+        profile_chip_1: "Monthly limit setup",
+        profile_chip_2: "Savings goal",
+        profile_chip_3: "Priority category",
+        profile_chip_4: "Tone-based insights",
+        profile_why_title: "Why is this section important?",
+        profile_why_text: "When the profile area is filled in, charts, AI notes, and budget risk warnings become much more meaningful. So this is not just a settings screen, it is the personalization center of the app.",
+        profile_why_point_1: "Income and limit data help the “remaining space” calculation stay accurate.",
+        profile_why_point_2: "Priority category selection highlights which spending area you should watch more closely.",
+        profile_why_point_3: "Your money management style can make future recommendations feel more personal.",
+        profile_examples_title: "Example profile scenarios",
+        persona_1_title: "Controlled profile",
+        persona_1_text: "A usage style for someone with a clear spending limit who wants fast alerts when risk increases.",
+        persona_2_title: "Saver profile",
+        persona_2_text: "A setup for someone who puts the savings goal first and wants to spot unnecessary spending faster.",
+        persona_3_title: "Flexible profile",
+        persona_3_text: "A user type who wants to track categories regularly even if the income-expense flow changes.",
+        setup_section_title: "Profile setup and data entry",
+        setup_section_intro: "From here, you can create your own profile, define your monthly budget, and keep your spending records directly on the page.",
+        profile_form_title: "Enter your profile details",
+        profile_form_intro: "Once your finance profile is created, analyses start adapting to you.",
+        setup_intro_title: "What does this area do?",
+        setup_point_1: "By setting your name and finance style, you personalize the app for yourself.",
+        setup_point_2: "Monthly limit and savings target help AI summaries work more accurately.",
+        setup_point_3: "Priority category selection shows which spending area you want to watch more closely.",
+        profile_step_1_title: "1. Basic information",
+        profile_step_1_text: "Let’s get to know you first. This information will be used in the profile summary and personal insights.",
+        profile_name_label: "Your name",
+        profile_name_placeholder: "Ex. Ethan",
+        profile_name_hint: "This name will appear on the profile card.",
+        profile_style_label: "Your money style",
+        profile_style_hint: "Choose the style that best describes your approach to spending.",
+        profile_step_2_title: "2. Your budget plan",
+        profile_step_2_text: "This area defines your monthly finance framework. Charts and status cards are built around it.",
+        profile_income_label: "Monthly income",
+        profile_income_hint: "Enter your regular total monthly income.",
+        profile_budget_label: "Monthly spending limit",
+        profile_budget_hint: "The total expense cap you aim not to exceed this month.",
+        profile_currency_label: "Base currency",
+        profile_currency_hint: "Totals and charts are calculated after being converted to this currency.",
+        profile_savings_label: "Savings goal",
+        profile_savings_hint: "The amount you want to set aside by the end of the month.",
+        profile_focus_label: "Priority category",
+        profile_focus_hint: "The spending area you want to monitor most closely.",
+        profile_step_3_title: "3. Category preferences",
+        profile_step_3_text: "If default categories are not enough, you can add new ones that fit your own finance flow.",
+        category_add_label: "Add your own category",
+        category_add_placeholder: "Ex. Health or Education",
+        category_add_button: "Add Category",
+        category_add_hint: "The category you add becomes available in the transaction form instantly.",
+        save_profile_button: "Save Profile",
+        reset_all_button: "Delete All Data",
+        live_profile_summary: "Live profile summary",
+        not_created_yet: "Not created yet",
+        summary_style_label: "Style",
+        summary_focus_label: "Focus",
+        summary_budget_label: "Spending limit",
+        summary_savings_label: "Savings goal",
+        entry_form_title: "Add expense or income",
+        entry_form_intro: "The records you add appear in the list below and affect the summary area instantly.",
+        entry_title_label: "Transaction title",
+        entry_title_placeholder: "Ex. Grocery shopping",
+        entry_type_label: "Transaction type",
+        entry_type_expense: "Expense",
+        entry_type_income: "Income",
+        entry_category_label: "Category",
+        entry_amount_label: "Amount",
+        entry_currency_label: "Currency",
+        entry_date_label: "Date",
+        entry_add_button: "Add Entry",
+        summary_income_label: "Total income",
+        summary_expense_label: "Total expense",
+        summary_remaining_label: "Remaining budget",
+        summary_count_label: "Total entries",
+        ai_note_title: "Dolmacı AI note",
+        rate_status_label: "Rate status:",
+        rate_status_checking: "Checking latest rates.",
+        empty_entries: "No entries yet. Start by adding your first income or expense.",
+        back_panel_title: "Ready if you want to return to the intro page.",
+        back_panel_text: "This screen is now reserved for direct usage. If you want to see the product explanation again, you can return to the main page.",
+        back_to_intro_button: "Back to Intro",
+        back_to_top_button: "Back to Top",
+        footer_left: "Dolmacı Finans personal usage interface",
+        footer_right: "Your AI-powered personal finance assistant",
+        export_csv_button: "Export CSV",
+        export_json_button: "Backup JSON",
+        import_json_button: "Restore Backup",
+        toolbar_note: "You can edit, delete, or back up your records.",
+        entry_edit: "Edit",
+        entry_delete: "Delete",
+        entry_update_button: "Update Entry",
+        entry_add_button: "Add Entry",
+        import_error: "Backup file could not be read.",
+        import_success: "Backup restored successfully.",
+        delete_confirm: "Delete this record?",
+        no_data: "No data",
+        donut_empty: "Add an expense record to see category distribution.",
+        category_empty: "Add an expense to see category-based view.",
+        not_available: "Not yet",
+        type_income: "Income",
+        type_expense: "Expense",
+        search_no_results: "No records matched your search. Try a different keyword.",
+        confirm_reset: "Delete all profile, category, and transaction data?",
+        ai_no_profile: "Once you create your profile and add a few records, you will see your personal summary here.",
+        ai_no_entries: "There are no transactions for {name} yet. Once you add the first record, Dolmacı AI will start interpreting your spending pattern.",
+        ai_over_budget: "{name}, you are currently above your monthly limit. It may help to be more careful especially in the {focus} category.",
+        ai_budget_warning: "{name}, you have used most of your spending limit. You have {remaining} left until the end of the month.",
+        ai_balanced: "{name}, your finance flow looks balanced. {focus} is currently the category that should be monitored most closely.",
+        risk_start: "Starting",
+        risk_low: "Low",
+        risk_medium: "Medium",
+        risk_high: "High",
+        hero_title_default: "Your financial view will come alive here once you create your profile.",
+        hero_body_default: "As you enter income, expense, and budget data, this area will update based on your real situation.",
+        hero_title_over: "Your spending has gone above the budget you set for this month.",
+        hero_body_over: "Your total expense is at {expense}. Tightening control especially around {focus} could help.",
+        hero_title_warn: "You have used most of your budget.",
+        hero_body_warn: "You still have {remaining} left before the month ends. It would be smart to watch your priority categories in upcoming spending.",
+        hero_title_good: "This month’s finance flow looks aligned with your profile.",
+        hero_body_good: "Your net position is {net}. {topCategory} is currently your most visible expense area.",
+        rate_updated_prefix: "Last update:",
+        rate_updated_loading: "Last update: Refreshing...",
+        rate_updated_fallback: "Last update: Using fallback data",
+        rate_status_live_all: "FX and gold rates were updated. Last update {time}.",
+        rate_status_live_fx_only: "FX rates were updated. Gold data could not be fetched, so the last fallback value is being used. Last update {time}.",
+        rate_status_fallback: "Live rates could not be reached, fallback rates are being used.",
+        rate_status_refreshing: "Rates are being refreshed.",
+        rate_label_base: "Base reference ({base})",
+        rate_label_ounce: "Reference ounce value",
+        rate_label_gram: "24k gram gold / {base}",
+        rate_label_source: "{source} · in {base}",
+        source_live: "Live rate",
+        source_backup: "Backup rate",
+        settings_title: "Settings",
+        settings_intro: "You can customize the app language and appearance here.",
+        language_title: "Language",
+        language_text: "You can switch the interface language between Turkish and English.",
+        language_label: "Interface language",
+        theme_title: "Theme",
+        theme_text: "You can choose the current light theme or a darker theme.",
+        theme_label: "Appearance theme",
+        budget_hint_title: "Budget note",
+        budget_hint_text: "When monthly limit and savings target are entered together, the remaining budget and risk cards become more accurate."
+      }
+    };
+
+    const categories = [...defaultCategories];
+
+    const entryState = [];
+    const investmentState = [];
+    const searchState = {
+      query: ""
+    };
+    let nextEntryId = 1;
+    let editingEntryId = null;
+
+    function saveState() {
+      const payload = {
+        profile: profileState,
+        categories,
+        entries: entryState,
+        investments: investmentState,
+        rates: {
+          exchangeRatesToTry,
+          rateTrends,
+          rateHistory
+        }
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(payload));
+    }
+
+    function createEntryId() {
+      const entryId = `entry-${nextEntryId}`;
+      nextEntryId += 1;
+      return entryId;
+    }
+
+    function pruneRateHistory() {
+      const now = Date.now();
+      Object.keys(rateHistory).forEach((currency) => {
+        rateHistory[currency] = (rateHistory[currency] || []).filter((point) => (now - Number(point.time || 0)) <= twentyFourHoursMs);
+      });
+    }
+
+    function pushRateSnapshot(snapshotTime = Date.now()) {
+      Object.entries(exchangeRatesToTry).forEach(([currency, value]) => {
+        rateHistory[currency] = rateHistory[currency] || [];
+        rateHistory[currency].push({ time: snapshotTime, value: Number(value) || 0 });
+      });
+      pruneRateHistory();
+    }
+
+    function getRateSeriesForChart(currency, selectedBase) {
+      const fallbackValues = (rateTrends[currency] || [exchangeRatesToTry[currency] || 1]).map((value) => ({
+        time: Date.now(),
+        value
+      }));
+
+      const xauHistory = (rateHistory.XAU || []).length >= 2 ? rateHistory.XAU : fallbackValues;
+      const usdHistory = (rateHistory.USD || []).length >= 2
+        ? rateHistory.USD
+        : (rateTrends.USD || [exchangeRatesToTry.USD || 1]).map((value) => ({ time: Date.now(), value }));
+      const currencyHistory = (rateHistory[currency] || []).length >= 2 ? rateHistory[currency] : fallbackValues;
+
+      const sourceSeries = currency === "GAUTRY"
+        ? xauHistory.map((point, index) => {
+            const usdPoint = usdHistory[index] || { value: exchangeRatesToTry.USD };
+            return {
+              time: point.time,
+              value: convertAmount(((Number(point.value) || exchangeRatesToTry.XAU) * (Number(usdPoint.value) || exchangeRatesToTry.USD)) / 31.1035, "TRY", selectedBase)
+            };
+          })
+        : currencyHistory.map((point) => ({
+            time: point.time,
+            value: currency === "XAU"
+              ? Number(point.value) || exchangeRatesToTry.XAU
+              : convertAmount(Number(point.value) || exchangeRatesToTry[currency] || 1, "TRY", selectedBase)
+          }));
+
+      return sourceSeries.filter((point) => Number.isFinite(point.value));
+    }
+
+    function sanitizeText(value) {
+      return String(value || "")
+        .replace(/[<>"'`]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(storageKey);
+
+      if (!saved) {
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+
+        if (parsed.profile) {
+          profileState.name = sanitizeText(parsed.profile.name || "");
+          profileState.style = parsed.profile.style || "Dengeli";
+          profileState.income = Number(parsed.profile.income) || 0;
+          profileState.budget = Number(parsed.profile.budget) || 0;
+          profileState.savings = Number(parsed.profile.savings) || 0;
+          profileState.focus = sanitizeText(parsed.profile.focus || "Market") || "Market";
+          profileState.chartType = parsed.profile.chartType || "bar";
+          profileState.baseCurrency = parsed.profile.baseCurrency || "TRY";
+          profileState.ratesBase = parsed.profile.ratesBase || "TRY";
+          profileState.language = parsed.profile.language || "tr";
+          profileState.theme = parsed.profile.theme || "light";
+        }
+
+        if (Array.isArray(parsed.categories) && parsed.categories.length) {
+          categories.splice(0, categories.length, ...parsed.categories.map((category) => sanitizeText(category)).filter(Boolean));
+        }
+
+        if (Array.isArray(parsed.entries)) {
+          entryState.splice(0, entryState.length, ...parsed.entries.map((entry) => ({
+            id: entry.id || createEntryId(),
+            title: sanitizeText(entry.title || ""),
+            type: entry.type === "income" ? "income" : "expense",
+            category: sanitizeText(entry.category || categories[0]) || categories[0],
+            amount: Number(entry.amount) || 0,
+            date: entry.date || todayString,
+            currency: entry.currency || "TRY"
+          })));
+
+          const maxEntryId = entryState.reduce((maxValue, entry) => {
+            const numericPart = Number(String(entry.id || "").replace("entry-", ""));
+            return Number.isFinite(numericPart) ? Math.max(maxValue, numericPart) : maxValue;
+          }, 0);
+
+          nextEntryId = maxEntryId + 1;
+        }
+
+        if (Array.isArray(parsed.investments)) {
+          investmentState.splice(0, investmentState.length, ...parsed.investments.map((item) => ({
+            id: item.id || createEntryId(),
+            symbol: sanitizeText(item.symbol || ""),
+            name: sanitizeText(item.name || ""),
+            lot: Number(item.lot) || 0,
+            buyPrice: Number(item.buyPrice) || 0,
+            currentPrice: Number(item.currentPrice) || 0,
+            market: sanitizeText(item.market || "BIST") || "BIST"
+          })));
+        }
+
+        if (parsed.rates) {
+          exchangeRatesToTry = {
+            ...exchangeRatesToTry,
+            ...(parsed.rates.exchangeRatesToTry || {})
+          };
+          rateTrends = {
+            ...rateTrends,
+            ...(parsed.rates.rateTrends || {})
+          };
+          rateHistory = parsed.rates.rateHistory || {};
+          pruneRateHistory();
+        }
+      } catch (error) {
+        console.error("Kayıtlı veriler okunamadı:", error);
+      }
+    }
+
+    function resetAllData() {
+      profileState.name = "";
+      profileState.style = "Dengeli";
+      profileState.income = 0;
+      profileState.budget = 0;
+      profileState.savings = 0;
+      profileState.focus = "Market";
+      profileState.chartType = "bar";
+      profileState.baseCurrency = "TRY";
+      profileState.ratesBase = "TRY";
+      profileState.language = "tr";
+      profileState.theme = "light";
+      nextEntryId = 1;
+      rateHistory = {};
+
+      categories.splice(0, categories.length, ...defaultCategories);
+      entryState.splice(0, entryState.length);
+      investmentState.splice(0, investmentState.length);
+
+      localStorage.removeItem(storageKey);
+      profileForm.reset();
+      clearEntryForm();
+      categoryNameInput.value = "";
+      entryDateInput.value = todayString;
+      entryCurrencySelect.value = "TRY";
+      renderCategoryOptions();
+      updateProfileSummary();
+      renderEntries();
+    }
+
+    function formatMoney(value) {
+      return formatMoneyByCurrency(value, profileState.baseCurrency || "TRY");
+    }
+
+    function applyTheme() {
+      document.body.setAttribute("data-theme", profileState.theme || "light");
+      themeSelect.value = profileState.theme || "light";
+    }
+
+    function t(key, variables = {}) {
+      const locale = translations[profileState.language] || translations.tr;
+      const template = locale[key] || translations.tr[key] || key;
+      return Object.entries(variables).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, value), template);
+    }
+
+    function applyLanguage() {
+      const locale = translations[profileState.language] || translations.tr;
+      languageSelect.value = profileState.language || "tr";
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        if (locale[key]) {
+          element.textContent = locale[key];
+        }
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+        const key = element.getAttribute("data-i18n-placeholder");
+        if (locale[key]) {
+          element.setAttribute("placeholder", locale[key]);
+        }
+      });
+
+      const profileStyleOptions = {
+        Dengeli: profileState.language === "en" ? "Balanced" : "Dengeli",
+        Biriktiren: profileState.language === "en" ? "Saver" : "Biriktiren",
+        Esnek: profileState.language === "en" ? "Flexible" : "Esnek",
+        Kontrollü: profileState.language === "en" ? "Controlled" : "Kontrollü"
+      };
+
+      [...document.querySelector("#profile-style").options].forEach((option) => {
+        option.textContent = profileStyleOptions[option.value] || option.value;
+      });
+
+      const profileCurrencyOptions = {
+        TRY: profileState.language === "en" ? "Turkish Lira (TRY)" : "Türk Lirası (TRY)",
+        USD: profileState.language === "en" ? "US Dollar (USD)" : "Amerikan Doları (USD)",
+        EUR: "Euro (EUR)",
+        GBP: profileState.language === "en" ? "Pound Sterling (GBP)" : "Sterlin (GBP)"
+      };
+
+      [...document.querySelector("#profile-currency").options].forEach((option) => {
+        option.textContent = profileCurrencyOptions[option.value] || option.value;
+      });
+
+      [...document.querySelector("#entry-currency").options].forEach((option) => {
+        option.textContent = profileCurrencyOptions[option.value] || option.value;
+      });
+
+      [...ratesBaseSelect.options].forEach((option) => {
+        option.textContent = `${profileState.language === "en" ? "Base" : "Referans"}: ${option.value}`;
+      });
+
+      renderEntries();
+      renderRateCards(t("source_live"));
+      renderSearchSuggestions();
+    }
+
+    function formatMoneyByCurrency(value, currency = "TRY") {
+      return new Intl.NumberFormat("tr-TR", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function formatPreciseNumber(value, digits = 4) {
+      return new Intl.NumberFormat("tr-TR", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value || 0);
+    }
+
+    function formatRawRateValue(value) {
+      const numericValue = Number(value || 0);
+
+      if (!Number.isFinite(numericValue)) {
+        return "0";
+      }
+
+      const raw = numericValue.toString();
+
+      if (!raw.includes("e")) {
+        const [integerPart, decimalPart] = raw.split(".");
+        const groupedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return decimalPart ? `${groupedInteger},${decimalPart}` : groupedInteger;
+      }
+
+      return new Intl.NumberFormat("tr-TR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 8
+      }).format(numericValue);
+    }
+
+    function normalizeSearchText(value) {
+      return (value || "")
+        .toString()
+        .toLocaleLowerCase("tr-TR")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function textMatchesQuery(value) {
+      const query = normalizeSearchText(searchState.query);
+
+      if (!query) {
+        return true;
+      }
+
+      return normalizeSearchText(value).includes(query);
+    }
+
+    function applyDashboardSearch() {
+      const blocks = document.querySelectorAll(".rate-card, .dashboard-card, .analysis-card, .workspace-card, .profile-card, .profile-detail-card, .summary-card");
+      const hasQuery = Boolean(searchState.query.trim());
+
+      blocks.forEach((block) => {
+        const isMatch = !hasQuery || textMatchesQuery(block.textContent);
+        block.classList.toggle("search-match", hasQuery && isMatch);
+        block.classList.toggle("search-dim", hasQuery && !isMatch);
+      });
+    }
+
+    function getSearchSuggestions() {
+      const query = searchState.query.trim();
+
+      if (!query) {
+        return [];
+      }
+
+      const sections = [
+        { label: "Canlı Kur", description: "Kur paneline git", target: "#canli-kur", keywords: "kur canlı döviz dolar euro sterlin altın gram altın rates forex" },
+        { label: "Dashboard", description: "Genel özet ve grafik alanı", target: "#anasayfa", keywords: "dashboard özet grafik analiz risk bütçe ai analiz home summary chart" },
+        { label: "Profil", description: "Kişisel harcama profiline git", target: "#profil", keywords: "profil kullanıcı kişisel tarz hedef kategori profile" },
+        { label: "Veri Girişi", description: "Gelir ve gider ekleme alanı", target: "#kurulum", keywords: "işlem veri giriş gelir gider kayıt ekle transaction entry expense income" }
+      ];
+
+      const sectionMatches = sections
+        .filter((item) => textMatchesQuery(`${item.label} ${item.description} ${item.keywords}`))
+        .map((item) => ({ type: "section", ...item }));
+
+      const entryMatches = entryState
+        .filter((entry) => {
+          const typeTerms = entry.type === "income" ? "gelir income" : "gider expense";
+          return textMatchesQuery(`${entry.title} ${entry.category} ${entry.currency || "TRY"} ${entry.date} ${typeTerms}`);
+        })
+        .slice(-5)
+        .reverse()
+        .map((entry) => ({
+          type: "entry",
+          id: entry.id,
+          label: entry.title,
+          description: `${entry.category} · ${entry.currency || "TRY"} · ${entry.date}`
+        }));
+
+      return [...sectionMatches, ...entryMatches].slice(0, 6);
+    }
+
+    function renderSearchSuggestions() {
+      const suggestions = getSearchSuggestions();
+
+      if (!suggestions.length) {
+        searchSuggestions.hidden = true;
+        searchSuggestions.innerHTML = "";
+        return;
+      }
+
+      searchSuggestions.hidden = false;
+      searchSuggestions.innerHTML = suggestions.map((suggestion) => `
+        <button
+          class="search-suggestion"
+          type="button"
+          data-search-type="${suggestion.type}"
+          ${suggestion.target ? `data-search-target="${suggestion.target}"` : ""}
+          ${suggestion.id ? `data-entry-id="${suggestion.id}"` : ""}
+        >
+          <strong>${escapeHtml(suggestion.label)}</strong>
+          <span>${escapeHtml(suggestion.description)}</span>
+        </button>
+      `).join("");
+    }
+
+    function navigateFromSuggestion(button) {
+      const target = button.getAttribute("data-search-target");
+      const entryId = button.getAttribute("data-entry-id");
+
+      if (target) {
+        const section = document.querySelector(target);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      if (entryId) {
+        const entryElement = document.querySelector(`[data-entry-id="${entryId}"]`);
+        if (entryElement) {
+          entryElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          entryElement.classList.add("search-match");
+        }
+      }
+
+      searchSuggestions.hidden = true;
+    }
+
+    function scrollToFirstSearchResult() {
+      const query = searchState.query.trim();
+
+      if (!query) {
+          return;
+      }
+
+      const firstMatch = document.querySelector(".rate-card.search-match, .dashboard-card.search-match, .analysis-card.search-match, .workspace-card.search-match, .profile-card.search-match, .profile-detail-card.search-match, .summary-card.search-match, .entry-item");
+
+      if (!firstMatch) {
+        return;
+      }
+
+      const targetSection = firstMatch.closest("section, article") || firstMatch;
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    function convertAmount(amount, fromCurrency = "TRY", toCurrency = profileState.baseCurrency || "TRY") {
+      const fromRate = exchangeRatesToTry[fromCurrency] || 1;
+      const toRate = exchangeRatesToTry[toCurrency] || 1;
+      const tryAmount = amount * fromRate;
+      return tryAmount / toRate;
+    }
+
+    function renderRateCards(sourceLabel = "Yedek kur") {
+      const selectedBase = profileState.ratesBase || "TRY";
+      const gramGoldTry = (exchangeRatesToTry.XAU * exchangeRatesToTry.USD) / 31.1035;
+      const currencies = ["TRY", "USD", "EUR", "GBP", "XAU", "GAUTRY"];
+      const symbols = { TRY: "₺", USD: "$", EUR: "€", GBP: "£", XAU: "Au", GAUTRY: "g" };
+      const titles = {
+        TRY: "Türk Lirası",
+        USD: "Amerikan Doları",
+        EUR: "Euro",
+        GBP: "Sterlin",
+        XAU: "Altın (ons)",
+        GAUTRY: "24 Ayar Gram Altın / TL"
+      };
+
+      rateGrid.innerHTML = currencies.map((currency) => {
+        const rawValue = currency === "GAUTRY" ? gramGoldTry : (exchangeRatesToTry[currency] || 1);
+        const value = currency === "XAU"
+          ? rawValue
+          : convertAmount(rawValue, "TRY", selectedBase);
+        const points = getRateSeriesForChart(currency, selectedBase).map((item) => item.value);
+        const previous = points.length > 1 ? points[points.length - 2] : value;
+        const diff = value - previous;
+        const percentChange = previous ? (diff / previous) * 100 : 0;
+        const direction = diff > 0.001 ? "up" : diff < -0.001 ? "down" : "flat";
+        const arrow = direction === "up" ? "▲" : direction === "down" ? "▼" : "•";
+        const label = currency === "TRY"
+          ? `Ana referans (${selectedBase})`
+          : currency === "XAU"
+            ? "Referans ons değeri"
+            : currency === "GAUTRY"
+              ? `24 ayar gram altın / ${selectedBase}`
+              : `${sourceLabel} · ${selectedBase} bazında`;
+        const maxPoint = Math.max(...points, 1);
+        const sparkline = points.map((point) => {
+          const height = Math.max(6, Math.round((point / maxPoint) * 30));
+          return `<span class="mini-bar ${direction}" style="height:${height}px;"></span>`;
+        }).join("");
+
+        return `
+          <div class="rate-card">
+            <div class="rate-headline">
+              <span>${currency} · ${titles[currency]}</span>
+              <div class="rate-symbol">${symbols[currency]}</div>
+            </div>
+            <div class="rate-meta">
+              <strong>${formatRawRateValue(value)}</strong>
+            </div>
+            <div class="rate-change ${direction}">${arrow} ${formatPreciseNumber(Math.abs(diff), currency === "XAU" ? 2 : 4)} · %${formatPreciseNumber(Math.abs(percentChange), 2)}</div>
+            <div class="mini-sparkline">${sparkline}</div>
+            <small>${label}</small>
+          </div>
+        `;
+      }).join("");
+
+      applyDashboardSearch();
+    }
+
+    async function fetchLiveRates() {
+      const today = new Date();
+      const from = new Date(today);
+      from.setDate(today.getDate() - 1);
+      const fromString = from.toISOString().split("T")[0];
+      const toString = today.toISOString().split("T")[0];
+      const endpoint = `https://api.frankfurter.dev/v2/rates?base=TRY&from=${fromString}&to=${toString}&quotes=USD,EUR,GBP`;
+      const goldEndpoint = "https://api.gold-api.com/price/XAU";
+
+      try {
+        const response = await fetch(endpoint, { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error("Kur servisi cevap vermedi");
+        }
+
+        const data = await response.json();
+        const nextRates = { TRY: 1 };
+        const nextTrends = { TRY: [1, 1, 1, 1, 1] };
+
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            if (item.quote && item.rate) {
+              nextRates[item.quote] = 1 / item.rate;
+              nextTrends[item.quote] = nextTrends[item.quote] || [];
+              nextTrends[item.quote].push(1 / item.rate);
+            }
+          });
+        }
+
+        exchangeRatesToTry = {
+          ...exchangeRatesToTry,
+          ...nextRates
+        };
+        rateTrends = {
+          ...rateTrends,
+          ...nextTrends
+        };
+
+        let goldUpdated = false;
+
+        try {
+          const goldResponse = await fetch(goldEndpoint, { cache: "no-store" });
+          if (goldResponse.ok) {
+            const goldData = await goldResponse.json();
+            const liveGoldPrice = Number(goldData.price) || exchangeRatesToTry.XAU;
+            exchangeRatesToTry.XAU = liveGoldPrice;
+            rateTrends.XAU = [...(rateTrends.XAU || []), liveGoldPrice].slice(-5);
+            goldUpdated = true;
+          }
+        } catch (goldError) {
+          goldUpdated = false;
+        }
+
+        const updatedAt = new Intl.DateTimeFormat("tr-TR", {
+          dateStyle: "short",
+          timeStyle: "short"
+        }).format(new Date());
+
+        rateUpdatedLabel.textContent = `Son güncelleme: ${updatedAt}`;
+        rateStatus.innerHTML = goldUpdated
+          ? `<strong>Kur durumu:</strong> Döviz ve altın kurları güncellendi. Son güncelleme ${updatedAt}.`
+          : `<strong>Kur durumu:</strong> Döviz kurları güncellendi. Altın verisi alınamadı, son yedek değer kullanılıyor. Son güncelleme ${updatedAt}.`;
+        renderRateCards("Canlı kur");
+        renderEntries();
+      } catch (error) {
+        rateUpdatedLabel.textContent = "Son güncelleme: Yedek veri kullanılıyor";
+        rateStatus.innerHTML = "<strong>Kur durumu:</strong> Canlı kura ulaşılamadı, sabit yedek kurlar kullanılıyor.";
+        renderRateCards("Yedek kur");
+      }
+    }
+
+    function getCategoryColor(category) {
+      if (categoryColorMap[category]) {
+        return categoryColorMap[category];
+      }
+
+      const generatedColors = ["#5d8bff", "#ff8f5d", "#51a98a", "#c36cf0", "#e25d8c", "#c2a23a"];
+      let hash = 0;
+
+      for (let index = 0; index < category.length; index += 1) {
+        hash = category.charCodeAt(index) + ((hash << 5) - hash);
+      }
+
+      return generatedColors[Math.abs(hash) % generatedColors.length];
+    }
+
+    function updateProfileSummary() {
+      profileForm.querySelector("#profile-name").value = profileState.name;
+      profileForm.querySelector("#profile-style").value = profileState.style;
+      profileForm.querySelector("#profile-income").value = profileState.income || "";
+      profileForm.querySelector("#profile-budget").value = profileState.budget || "";
+      profileForm.querySelector("#profile-currency").value = profileState.baseCurrency;
+      profileForm.querySelector("#profile-savings").value = profileState.savings || "";
+      ratesBaseSelect.value = profileState.ratesBase;
+      languageSelect.value = profileState.language;
+      themeSelect.value = profileState.theme;
+      entryToolbarNote.textContent = t("toolbar_note");
+      updateEntryFormMode();
+
+      document.querySelector("#summary-name").textContent = profileState.name || t("not_created_yet");
+      const styleLabels = {
+        Dengeli: profileState.language === "en" ? "Balanced" : "Dengeli",
+        Biriktiren: profileState.language === "en" ? "Saver" : "Biriktiren",
+        Esnek: profileState.language === "en" ? "Flexible" : "Esnek",
+        Kontrollü: profileState.language === "en" ? "Controlled" : "Kontrollü"
+      };
+      document.querySelector("#summary-style").textContent = styleLabels[profileState.style] || profileState.style;
+      document.querySelector("#preview-focus").textContent = profileState.focus;
+      document.querySelector("#summary-budget").textContent = formatMoney(profileState.budget);
+      document.querySelector("#summary-savings").textContent = formatMoney(profileState.savings);
+      chartTypeSelect.value = profileState.chartType;
+    }
+
+    function renderCategoryOptions() {
+      const options = categories
+        .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+        .join("");
+
+      profileFocusSelect.innerHTML = options;
+      entryCategorySelect.innerHTML = options;
+
+      if (categories.includes(profileState.focus)) {
+        profileFocusSelect.value = profileState.focus;
+      } else {
+        profileState.focus = categories[0];
+        profileFocusSelect.value = profileState.focus;
+      }
+
+      entryCategorySelect.value = categories.includes(entryCategorySelect.value) ? entryCategorySelect.value : categories[0];
+
+      categoryList.innerHTML = categories
+        .map((category) => `
+          <span class="tag">
+            <span class="tag-color" style="background:${getCategoryColor(category)};"></span>${escapeHtml(category)}
+          </span>
+        `)
+        .join("");
+    }
+
+    function addCategory() {
+      const newCategory = sanitizeText(categoryNameInput.value);
+
+      if (!newCategory) {
+        return;
+      }
+
+      const exists = categories.some((category) => category.toLowerCase() === newCategory.toLowerCase());
+
+      if (exists) {
+        categoryNameInput.value = "";
+        return;
+      }
+
+      categories.push(newCategory);
+      profileState.focus = newCategory;
+      renderCategoryOptions();
+      categoryNameInput.value = "";
+      saveState();
+    }
+
+    function buildAiNote(totalIncome, totalExpense, remainingBudget) {
+      if (!profileState.name) {
+        return "Profilini oluşturduktan ve birkaç kayıt ekledikten sonra burada kişisel özetini göreceksin.";
+      }
+
+      if (!entryState.length) {
+        return profileState.name + " için henüz işlem yok. İlk kaydı eklediğinde Dolmacı AI harcama düzenini yorumlamaya başlayacak.";
+      }
+
+      if (remainingBudget < 0) {
+        return profileState.name + ", şu anda aylık limitinin üstündesin. Özellikle " + profileState.focus.toLowerCase() + " kategorisinde daha dikkatli olmak faydalı olabilir.";
+      }
+
+      if (totalExpense > profileState.budget * 0.8 && profileState.budget > 0) {
+        return profileState.name + ", harcama limitinin büyük kısmını kullandın. Ay sonuna kadar " + formatMoney(remainingBudget) + " alanın kaldı.";
+      }
+
+      return profileState.name + ", görünüşe göre finans akışın dengeli. " + profileState.focus + " kategorisi şu an en yakından takip edilmesi gereken alan olarak seçili.";
+    }
+
+    function getTopExpenseCategory() {
+      const expenses = entryState.filter((entry) => entry.type === "expense");
+
+      if (!expenses.length) {
+        return "Henüz yok";
+      }
+
+      const totals = expenses.reduce((accumulator, entry) => {
+        accumulator[entry.category] = (accumulator[entry.category] || 0) + convertAmount(entry.amount, entry.currency || "TRY");
+        return accumulator;
+      }, {});
+
+      return Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0];
+    }
+    function updateEntryFormMode() {
+      entrySubmitButton.textContent = editingEntryId ? t("entry_update_button") : t("entry_add_button");
+    }
+
+    function startEditingEntry(entryId) {
+      const entry = entryState.find((item) => item.id === entryId);
+
+      if (!entry) {
+        return;
+      }
+
+      editingEntryId = entryId;
+      entryForm.querySelector("#entry-title").value = entry.title;
+      entryForm.querySelector("#entry-type").value = entry.type;
+      entryCategorySelect.value = entry.category;
+      entryForm.querySelector("#entry-amount").value = entry.amount;
+      entryCurrencySelect.value = entry.currency || "TRY";
+      entryDateInput.value = entry.date || todayString;
+      updateEntryFormMode();
+      entryForm.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function clearEntryForm() {
+      editingEntryId = null;
+      entryForm.reset();
+      entryForm.querySelector("#entry-type").value = "expense";
+      entryCategorySelect.value = categories[0];
+      entryCurrencySelect.value = "TRY";
+      entryDateInput.value = todayString;
+      updateEntryFormMode();
+    }
+
+    function deleteEntry(entryId) {
+      const confirmed = window.confirm(t("delete_confirm"));
+
+      if (!confirmed) {
+        return;
+      }
+
+      const index = entryState.findIndex((entry) => entry.id === entryId);
+
+      if (index === -1) {
+        return;
+      }
+
+      entryState.splice(index, 1);
+
+      if (editingEntryId === entryId) {
+        clearEntryForm();
+      }
+
+      renderEntries();
+    }
+
+    function downloadTextFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportEntriesAsCsv() {
+      const rows = [
+        ["title", "type", "category", "amount", "currency", "date"],
+        ...entryState.map((entry) => [entry.title, entry.type, entry.category, entry.amount, entry.currency || "TRY", entry.date])
+      ];
+      const csv = rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+      downloadTextFile("dolmaci-finans-kayitlar.csv", csv, "text/csv;charset=utf-8;");
+    }
+
+    function exportBackupJson() {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        profile: profileState,
+        categories,
+        entries: entryState
+      };
+      downloadTextFile("dolmaci-finans-yedek.json", JSON.stringify(payload, null, 2), "application/json;charset=utf-8;");
+    }
+
+    function importBackupJson(file) {
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(String(reader.result || "{}"));
+
+          if (parsed.profile) {
+            Object.assign(profileState, {
+              ...profileState,
+              ...parsed.profile
+            });
+          }
+
+          if (Array.isArray(parsed.categories) && parsed.categories.length) {
+            categories.splice(0, categories.length, ...parsed.categories);
+          }
+
+          if (Array.isArray(parsed.entries)) {
+            entryState.splice(0, entryState.length, ...parsed.entries.map((entry) => ({
+              id: entry.id || createEntryId(),
+              title: entry.title || "",
+              type: entry.type === "income" ? "income" : "expense",
+              category: entry.category || categories[0],
+              amount: Number(entry.amount) || 0,
+              currency: entry.currency || "TRY",
+              date: entry.date || todayString
+            })));
+
+            const maxEntryId = entryState.reduce((maxValue, entry) => {
+              const numericPart = Number(String(entry.id || "").replace("entry-", ""));
+              return Number.isFinite(numericPart) ? Math.max(maxValue, numericPart) : maxValue;
+            }, 0);
+
+            nextEntryId = maxEntryId + 1;
+          }
+
+          renderCategoryOptions();
+          updateProfileSummary();
+          clearEntryForm();
+          renderEntries();
+          window.alert(t("import_success"));
+        } catch (error) {
+          window.alert(t("import_error"));
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
+    function getExpenseCategoryTotals() {
+      const expenses = entryState.filter((entry) => entry.type === "expense");
+
+      return Object.entries(expenses.reduce((accumulator, entry) => {
+        accumulator[entry.category] = (accumulator[entry.category] || 0) + convertAmount(entry.amount, entry.currency || "TRY");
+        return accumulator;
+      }, {})).sort((a, b) => b[1] - a[1]);
+    }
+
+    function updateGraphView() {
+      Object.entries(graphViews).forEach(([key, element]) => {
+        element.classList.toggle("active", key === profileState.chartType);
+      });
+    }
+    function buildAiNote(totalIncome, totalExpense, remainingBudget) {
+      if (!profileState.name) {
+        return t("ai_no_profile");
+      }
+
+      if (!entryState.length) {
+        return t("ai_no_entries", { name: profileState.name });
+      }
+
+      if (remainingBudget < 0) {
+        return t("ai_over_budget", { name: profileState.name, focus: profileState.focus.toLowerCase() });
+      }
+
+      if (totalExpense > profileState.budget * 0.8 && profileState.budget > 0) {
+        return t("ai_budget_warning", { name: profileState.name, remaining: formatMoney(remainingBudget) });
+      }
+
+      return t("ai_balanced", { name: profileState.name, focus: profileState.focus });
+    }
+
+    function updateDonutChart(expenseTotals) {
+      if (!expenseTotals.length) {
+        donutChart.style.background = "conic-gradient(#52645f 0deg 360deg)";
+        donutCenter.textContent = t("no_data");
+        donutLegend.innerHTML = `<div class="empty-state">${t("donut_empty")}</div>`;
+        categoryBreakdown.innerHTML = `<div class="empty-state">${t("category_empty")}</div>`;
+        return;
+      }
+
+      const total = expenseTotals.reduce((sum, [, value]) => sum + value, 0);
+      let start = 0;
+      const segments = expenseTotals.slice(0, 6).map(([category, value]) => {
+        const angle = (value / total) * 360;
+        const color = getCategoryColor(category);
+        const segment = `${color} ${start}deg ${start + angle}deg`;
+        start += angle;
+        return { category, value, color, segment, percent: Math.round((value / total) * 100) };
+      });
+
+      donutChart.style.background = `conic-gradient(${segments.map((item) => item.segment).join(", ")})`;
+      donutCenter.textContent = formatMoney(total);
+      donutLegend.innerHTML = segments.map((item) => `
+        <div class="donut-legend-item">
+          <div class="legend-top">
+            <span><span class="legend-dot" style="background:${item.color};"></span>${item.category}</span>
+            <strong>${item.percent}%</strong>
+          </div>
+        </div>
+      `).join("");
+      categoryBreakdown.innerHTML = segments.map((item) => `
+        <div class="breakdown-item">
+          <div class="breakdown-top">
+            <span>${item.category}</span>
+            <strong>${formatMoney(item.value)}</strong>
+          </div>
+          <div class="breakdown-bar">
+            <div class="breakdown-fill" style="width:${item.percent}%; background:${item.color};"></div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function updateHeroPanel(totalIncome, totalExpense, remainingBudget) {
+      const netBalance = totalIncome - totalExpense;
+      const topCategory = getTopExpenseCategory();
+      const expenseTotals = getExpenseCategoryTotals();
+      const savingPotential = Math.max(remainingBudget, 0);
+      let riskLevel = t("risk_low");
+      let title = t("hero_title_default");
+      let body = t("hero_body_default");
+
+      if (!profileState.name && !entryState.length) {
+        riskLevel = t("risk_start");
+      } else if (remainingBudget < 0) {
+        riskLevel = t("risk_high");
+        title = t("hero_title_over");
+        body = t("hero_body_over", { expense: formatMoney(totalExpense), focus: profileState.focus.toLowerCase() });
+      } else if (profileState.budget > 0 && totalExpense > profileState.budget * 0.8) {
+        riskLevel = t("risk_medium");
+        title = t("hero_title_warn");
+        body = t("hero_body_warn", { remaining: formatMoney(remainingBudget) });
+      } else if (entryState.length) {
+        title = t("hero_title_good");
+        body = t("hero_body_good", { net: formatMoney(netBalance), topCategory: topCategory.toLowerCase() });
+      }
+
+      heroBalance.textContent = formatMoney(netBalance);
+      heroAnalysisTitle.textContent = title;
+      heroAnalysisBody.textContent = body;
+      heroTopCategory.textContent = topCategory;
+      heroSavingPotential.textContent = formatMoney(savingPotential);
+      heroRiskLevel.textContent = riskLevel;
+      heroPeriod.textContent = new Intl.DateTimeFormat(profileState.language === "en" ? "en-US" : "tr-TR", {
+        month: "long",
+        year: "numeric"
+      }).format(new Date());
+
+      const values = {
+        income: totalIncome,
+        expense: totalExpense,
+        remaining: Math.max(remainingBudget, 0),
+        budget: profileState.budget,
+        savings: profileState.savings,
+        count: entryState.length * 1000
+      };
+
+      const maxValue = Math.max(...Object.values(values), 1);
+
+      Object.entries(heroBars).forEach(([key, element]) => {
+        const percent = Math.max(10, Math.round((values[key] / maxValue) * 100));
+        element.style.height = percent + "%";
+        element.classList.toggle("active", key === "remaining");
+      });
+
+      updateDonutChart(expenseTotals);
+      updateGraphView();
+    }
+
+    function renderRateCards(sourceLabel = t("source_backup")) {
+      const selectedBase = profileState.ratesBase || "TRY";
+      const gramGoldTry = (exchangeRatesToTry.XAU * exchangeRatesToTry.USD) / 31.1035;
+      const currencies = ["TRY", "USD", "EUR", "GBP", "XAU", "GAUTRY"];
+      const symbols = { TRY: "₺", USD: "$", EUR: "€", GBP: "£", XAU: "Au", GAUTRY: "g" };
+      const titles = profileState.language === "en"
+        ? { TRY: "Turkish Lira", USD: "US Dollar", EUR: "Euro", GBP: "Pound Sterling", XAU: "Gold (ounce)", GAUTRY: "24k Gram Gold / TL" }
+        : { TRY: "Türk Lirası", USD: "Amerikan Doları", EUR: "Euro", GBP: "Sterlin", XAU: "Altın (ons)", GAUTRY: "24 Ayar Gram Altın / TL" };
+
+      rateGrid.innerHTML = currencies.map((currency) => {
+        const rawValue = currency === "GAUTRY" ? gramGoldTry : (exchangeRatesToTry[currency] || 1);
+        const value = currency === "XAU" ? rawValue : convertAmount(rawValue, "TRY", selectedBase);
+        const points = getRateSeriesForChart(currency, selectedBase).map((item) => item.value);
+        const previous = points.length > 1 ? points[points.length - 2] : value;
+        const diff = value - previous;
+        const percentChange = previous ? (diff / previous) * 100 : 0;
+        const direction = diff > 0.001 ? "up" : diff < -0.001 ? "down" : "flat";
+        const arrow = direction === "up" ? "▲" : direction === "down" ? "▼" : "•";
+        const label = currency === "TRY"
+          ? t("rate_label_base", { base: selectedBase })
+          : currency === "XAU"
+            ? t("rate_label_ounce")
+            : currency === "GAUTRY"
+              ? t("rate_label_gram", { base: selectedBase })
+              : t("rate_label_source", { source: sourceLabel, base: selectedBase });
+        const maxPoint = Math.max(...points, 1);
+        const sparkline = points.map((point) => {
+          const height = Math.max(6, Math.round((point / maxPoint) * 30));
+          return `<span class="mini-bar ${direction}" style="height:${height}px;"></span>`;
+        }).join("");
+
+        return `
+          <div class="rate-card">
+            <div class="rate-headline">
+              <span>${currency} · ${titles[currency]}</span>
+              <div class="rate-symbol">${symbols[currency]}</div>
+            </div>
+            <div class="rate-meta">
+              <strong>${formatRawRateValue(value)}</strong>
+            </div>
+            <div class="rate-change ${direction}">${arrow} ${formatPreciseNumber(Math.abs(diff), currency === "XAU" ? 2 : 4)} · %${formatPreciseNumber(Math.abs(percentChange), 2)}</div>
+            <div class="mini-sparkline">${sparkline}</div>
+            <small>${label}</small>
+          </div>
+        `;
+      }).join("");
+
+      applyDashboardSearch();
+    }
+
+    async function fetchLiveRates() {
+      const today = new Date();
+      const from = new Date(today);
+      from.setDate(today.getDate() - 1);
+      const fromString = from.toISOString().split("T")[0];
+      const toString = today.toISOString().split("T")[0];
+      const endpoint = `https://api.frankfurter.dev/v2/rates?base=TRY&from=${fromString}&to=${toString}&quotes=USD,EUR,GBP`;
+      const goldEndpoint = "https://api.gold-api.com/price/XAU";
+
+      try {
+        const response = await fetch(endpoint, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Rate service unavailable");
+        }
+
+        const data = await response.json();
+        const nextRates = { TRY: 1 };
+        const nextTrends = { TRY: [1, 1, 1, 1, 1] };
+
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            if (item.quote && item.rate) {
+              nextRates[item.quote] = 1 / item.rate;
+              nextTrends[item.quote] = nextTrends[item.quote] || [];
+              nextTrends[item.quote].push(1 / item.rate);
+            }
+          });
+        } else if (data && typeof data === "object") {
+          Object.values(data.rates || {}).forEach((valueMap) => {
+            Object.entries(valueMap || {}).forEach(([quote, rate]) => {
+              if (!rate) {
+                return;
+              }
+
+              nextRates[quote] = 1 / rate;
+              nextTrends[quote] = nextTrends[quote] || [];
+              nextTrends[quote].push(1 / rate);
+            });
+          });
+        }
+
+        exchangeRatesToTry = { ...exchangeRatesToTry, ...nextRates };
+        rateTrends = { ...rateTrends, ...nextTrends };
+
+        let goldUpdated = false;
+        try {
+          const goldResponse = await fetch(goldEndpoint, { cache: "no-store" });
+          if (goldResponse.ok) {
+            const goldData = await goldResponse.json();
+            const liveGoldPrice = Number(goldData.price) || exchangeRatesToTry.XAU;
+            exchangeRatesToTry.XAU = liveGoldPrice;
+            rateTrends.XAU = [...(rateTrends.XAU || []), liveGoldPrice].slice(-5);
+            goldUpdated = true;
+          }
+        } catch (goldError) {
+          goldUpdated = false;
+        }
+
+        const updatedAt = new Intl.DateTimeFormat(profileState.language === "en" ? "en-US" : "tr-TR", {
+          dateStyle: "short",
+          timeStyle: "short"
+        }).format(new Date());
+        pushRateSnapshot(Date.now());
+
+        rateUpdatedLabel.textContent = `${t("rate_updated_prefix")} ${updatedAt}`;
+        rateStatus.innerHTML = `<strong>${t("rate_status_label")}</strong> ${goldUpdated ? t("rate_status_live_all", { time: updatedAt }) : t("rate_status_live_fx_only", { time: updatedAt })}`;
+        renderRateCards(t("source_live"));
+        renderInvestmentWatchlist();
+        renderEntries();
+      } catch (error) {
+        rateUpdatedLabel.textContent = t("rate_updated_fallback");
+        rateStatus.innerHTML = `<strong>${t("rate_status_label")}</strong> ${t("rate_status_fallback")}`;
+        renderRateCards(t("source_backup"));
+        renderInvestmentWatchlist();
+      }
+    }
+
+    function renderEntries() {
+      const totalIncome = entryState
+        .filter((entry) => entry.type === "income")
+        .reduce((sum, entry) => sum + convertAmount(entry.amount, entry.currency || "TRY"), 0);
+
+      const totalExpense = entryState
+        .filter((entry) => entry.type === "expense")
+        .reduce((sum, entry) => sum + convertAmount(entry.amount, entry.currency || "TRY"), 0);
+
+      const remainingBudget = profileState.budget - totalExpense;
+
+      document.querySelector("#summary-income").textContent = formatMoney(totalIncome);
+      document.querySelector("#summary-expense").textContent = formatMoney(totalExpense);
+      document.querySelector("#summary-remaining").textContent = formatMoney(remainingBudget);
+      document.querySelector("#summary-count").textContent = String(entryState.length);
+      document.querySelector("#ai-note-text").textContent = buildAiNote(totalIncome, totalExpense, remainingBudget);
+      updateHeroPanel(totalIncome, totalExpense, remainingBudget);
+      saveState();
+
+      if (!entryState.length) {
+        entryList.innerHTML = `<div class="empty-state">${t("empty_entries")}</div>`;
+        applyDashboardSearch();
+        renderSearchSuggestions();
+        return;
+      }
+
+      const filteredEntries = entryState.filter((entry) => {
+        const typeTerms = entry.type === "income" ? "gelir income" : "gider expense";
+        return textMatchesQuery(`${entry.title} ${entry.category} ${entry.currency || "TRY"} ${entry.date} ${typeTerms}`);
+      });
+
+      if (!filteredEntries.length) {
+        entryList.innerHTML = `<div class="empty-state">${t("search_no_results")}</div>`;
+        applyDashboardSearch();
+        renderSearchSuggestions();
+        return;
+      }
+
+      entryList.innerHTML = filteredEntries.slice().reverse().map((entry) => {
+        const typeText = entry.type === "income" ? t("type_income") : t("type_expense");
+        const categoryColor = getCategoryColor(entry.category);
+        const formattedDate = new Intl.DateTimeFormat(profileState.language === "en" ? "en-US" : "tr-TR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        }).format(new Date(entry.date));
+        const formattedAmount = formatMoneyByCurrency(entry.amount, entry.currency || "TRY");
+        return `
+          <article class="entry-item" data-entry-id="${entry.id}" style="border-left-color:${categoryColor};">
+            <div>
+              <strong>${escapeHtml(entry.title)}</strong>
+              <div class="entry-meta"><span class="tag-color" style="background:${categoryColor};"></span>${escapeHtml(entry.category)} · ${typeText} · ${entry.currency || "TRY"} · ${formattedDate}</div>
+            </div>
+            <div class="entry-actions">
+              <div class="entry-amount">${formattedAmount}</div>
+              <button class="entry-action" type="button" data-entry-edit="${entry.id}">${t("entry_edit")}</button>
+              <button class="entry-action danger" type="button" data-entry-delete="${entry.id}">${t("entry_delete")}</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      applyDashboardSearch();
+      renderSearchSuggestions();
+    }
+
+    function renderInvestments() {
+      const totalCost = investmentState.reduce((sum, item) => sum + (item.lot * item.buyPrice), 0);
+      const totalValue = investmentState.reduce((sum, item) => sum + (item.lot * item.currentPrice), 0);
+      const totalProfit = totalValue - totalCost;
+
+      investmentTotalCost.textContent = formatMoneyByCurrency(totalCost, profileState.baseCurrency || "TRY");
+      investmentTotalValue.textContent = formatMoneyByCurrency(totalValue, profileState.baseCurrency || "TRY");
+      investmentTotalProfit.textContent = formatMoneyByCurrency(totalProfit, profileState.baseCurrency || "TRY");
+      investmentTotalCount.textContent = String(investmentState.length);
+
+      if (!investmentState.length) {
+        investmentList.innerHTML = `<div class="empty-state">${t("investment_empty")}</div>`;
+        renderInvestmentWatchlist();
+        return;
+      }
+
+      investmentList.innerHTML = investmentState.slice().reverse().map((item) => {
+        const totalItemCost = item.lot * item.buyPrice;
+        const totalItemValue = item.lot * item.currentPrice;
+        const totalItemProfit = totalItemValue - totalItemCost;
+        const profitClass = totalItemProfit >= 0 ? "up" : "down";
+
+        return `
+          <article class="investment-item">
+            <div class="investment-main">
+              <strong>${escapeHtml(item.symbol)} · ${escapeHtml(item.name)}</strong>
+              <div class="investment-meta">${escapeHtml(item.market)} · ${item.lot} lot · Alış: ${formatMoneyByCurrency(item.buyPrice, profileState.baseCurrency || "TRY")} · Güncel: ${formatMoneyByCurrency(item.currentPrice, profileState.baseCurrency || "TRY")}</div>
+            </div>
+            <div class="investment-value">
+              <strong>${formatMoneyByCurrency(totalItemValue, profileState.baseCurrency || "TRY")}</strong>
+              <span class="investment-profit ${profitClass}">${formatMoneyByCurrency(totalItemProfit, profileState.baseCurrency || "TRY")}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      renderInvestmentWatchlist();
+    }
+
+    function renderInvestmentWatchlist() {
+      const watchItems = [];
+      const baseCurrency = profileState.baseCurrency || "TRY";
+      investmentWatchlistTitle.textContent = profileState.language === "en" ? "Live asset list" : "Canlı yatırım listesi";
+      investmentWatchlistIntro.textContent = profileState.language === "en"
+        ? "FX and gold use live rate data, while your portfolio items appear with the current price you entered."
+        : "Döviz ve altın tarafı canlı kur verisiyle, portföy kalemlerin ise güncel giriş fiyatınla görünür.";
+      const liveAssets = [
+        {
+          symbol: "USD",
+          name: profileState.language === "en" ? "US Dollar" : "Amerikan Doları",
+          market: profileState.language === "en" ? "Live FX" : "Canlı Döviz",
+          price: convertAmount(exchangeRatesToTry.USD || 0, "TRY", baseCurrency),
+          previous: rateTrends.USD && rateTrends.USD.length > 1
+            ? convertAmount(rateTrends.USD[rateTrends.USD.length - 2], "TRY", baseCurrency)
+            : convertAmount(exchangeRatesToTry.USD || 0, "TRY", baseCurrency)
+        },
+        {
+          symbol: "EUR",
+          name: "Euro",
+          market: profileState.language === "en" ? "Live FX" : "Canlı Döviz",
+          price: convertAmount(exchangeRatesToTry.EUR || 0, "TRY", baseCurrency),
+          previous: rateTrends.EUR && rateTrends.EUR.length > 1
+            ? convertAmount(rateTrends.EUR[rateTrends.EUR.length - 2], "TRY", baseCurrency)
+            : convertAmount(exchangeRatesToTry.EUR || 0, "TRY", baseCurrency)
+        },
+        {
+          symbol: "GBP",
+          name: profileState.language === "en" ? "Pound Sterling" : "Sterlin",
+          market: profileState.language === "en" ? "Live FX" : "Canlı Döviz",
+          price: convertAmount(exchangeRatesToTry.GBP || 0, "TRY", baseCurrency),
+          previous: rateTrends.GBP && rateTrends.GBP.length > 1
+            ? convertAmount(rateTrends.GBP[rateTrends.GBP.length - 2], "TRY", baseCurrency)
+            : convertAmount(exchangeRatesToTry.GBP || 0, "TRY", baseCurrency)
+        },
+        {
+          symbol: "XAU",
+          name: profileState.language === "en" ? "24k Gram Gold" : "24 Ayar Gram Altın",
+          market: profileState.language === "en" ? "Live Gold" : "Canlı Altın",
+          price: convertAmount(((exchangeRatesToTry.XAU || 0) * (exchangeRatesToTry.USD || 0)) / 31.1035, "TRY", baseCurrency),
+          previous: rateTrends.XAU && rateTrends.XAU.length > 1
+            ? convertAmount((rateTrends.XAU[rateTrends.XAU.length - 2] * (exchangeRatesToTry.USD || 0)) / 31.1035, "TRY", baseCurrency)
+            : convertAmount(((exchangeRatesToTry.XAU || 0) * (exchangeRatesToTry.USD || 0)) / 31.1035, "TRY", baseCurrency)
+        }
+      ];
+
+      liveAssets.forEach((item) => {
+        watchItems.push({
+          symbol: item.symbol,
+          name: item.name,
+          market: item.market,
+          price: item.price,
+          previous: item.previous,
+          note: profileState.language === "en" ? "Updates with live rate panel" : "Canlı kur paneliyle güncellenir"
+        });
+      });
+
+      investmentState.slice().reverse().slice(0, 6).forEach((item) => {
+        watchItems.push({
+          symbol: item.symbol,
+          name: item.name,
+          market: item.market,
+          price: item.currentPrice,
+          previous: item.buyPrice,
+          note: profileState.language === "en" ? "Portfolio current price" : "Portföy güncel fiyatı"
+        });
+      });
+
+      if (!watchItems.length) {
+        investmentWatchlist.innerHTML = `<div class="empty-state">${profileState.language === "en" ? "No asset is available for the watchlist yet." : "İzleme listesinde gösterilecek varlık henüz yok."}</div>`;
+        return;
+      }
+
+      investmentWatchlist.innerHTML = watchItems.map((item) => {
+        const previous = Number(item.previous) || Number(item.price) || 0;
+        const current = Number(item.price) || 0;
+        const difference = current - previous;
+        const percent = previous ? (difference / previous) * 100 : 0;
+        const direction = difference > 0.0001 ? "up" : difference < -0.0001 ? "down" : "flat";
+        const arrow = direction === "up" ? "▲" : direction === "down" ? "▼" : "•";
+
+        return `
+          <article class="watch-item">
+            <div class="watch-main">
+              <strong>${escapeHtml(item.symbol)} · ${escapeHtml(item.name)}</strong>
+              <span>${escapeHtml(item.market)} · ${escapeHtml(item.note)}</span>
+            </div>
+            <div class="watch-value">
+              <strong>${formatMoneyByCurrency(current, baseCurrency)}</strong>
+              <span class="watch-change ${direction}">${arrow} ${formatPreciseNumber(Math.abs(percent), 2)}%</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function getTopExpenseCategory() {
+      const expenses = entryState.filter((entry) => entry.type === "expense");
+
+      if (!expenses.length) {
+        return t("not_available");
+      }
+
+      const totals = expenses.reduce((accumulator, entry) => {
+        accumulator[entry.category] = (accumulator[entry.category] || 0) + convertAmount(entry.amount, entry.currency || "TRY");
+        return accumulator;
+      }, {});
+
+      return Object.entries(totals).sort((a, b) => b[1] - a[1])[0][0];
+    }
+
+    function renderEntries() {
+      const totalIncome = entryState
+        .filter((entry) => entry.type === "income")
+        .reduce((sum, entry) => sum + convertAmount(entry.amount, entry.currency || "TRY"), 0);
+
+      const totalExpense = entryState
+        .filter((entry) => entry.type === "expense")
+        .reduce((sum, entry) => sum + convertAmount(entry.amount, entry.currency || "TRY"), 0);
+
+      const remainingBudget = profileState.budget - totalExpense;
+
+      document.querySelector("#summary-income").textContent = formatMoney(totalIncome);
+      document.querySelector("#summary-expense").textContent = formatMoney(totalExpense);
+      document.querySelector("#summary-remaining").textContent = formatMoney(remainingBudget);
+      document.querySelector("#summary-count").textContent = String(entryState.length);
+      document.querySelector("#ai-note-text").textContent = buildAiNote(totalIncome, totalExpense, remainingBudget);
+      updateHeroPanel(totalIncome, totalExpense, remainingBudget);
+      saveState();
+
+      if (!entryState.length) {
+        entryList.innerHTML = '<div class="empty-state">Henüz kayıt eklenmedi. İlk gelir veya giderini ekleyerek başla.</div>';
+        applyDashboardSearch();
+        renderSearchSuggestions();
+        return;
+      }
+
+      const filteredEntries = entryState.filter((entry) => {
+        const typeTerms = entry.type === "income" ? "gelir income" : "gider expense";
+        return textMatchesQuery(`${entry.title} ${entry.category} ${entry.currency || "TRY"} ${entry.date} ${typeTerms}`);
+      });
+
+      if (!filteredEntries.length) {
+        entryList.innerHTML = '<div class="empty-state">Aramana uygun kayıt bulunamadı. Farklı bir kelime dene.</div>';
+        applyDashboardSearch();
+        renderSearchSuggestions();
+        return;
+      }
+
+      entryList.innerHTML = filteredEntries
+        .slice()
+        .reverse()
+        .map((entry) => {
+          const typeText = entry.type === "income" ? "Gelir" : "Gider";
+          const categoryColor = getCategoryColor(entry.category);
+          const formattedDate = new Intl.DateTimeFormat("tr-TR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+          }).format(new Date(entry.date));
+          const formattedAmount = formatMoneyByCurrency(entry.amount, entry.currency || "TRY");
+          return `
+            <article class="entry-item" data-entry-id="${entry.id}" style="border-left-color:${categoryColor};">
+              <div>
+                <strong>${escapeHtml(entry.title)}</strong>
+                <div class="entry-meta"><span class="tag-color" style="background:${categoryColor};"></span>${escapeHtml(entry.category)} · ${typeText} · ${entry.currency || "TRY"} · ${formattedDate}</div>
+              </div>
+              <div class="entry-amount">${formattedAmount}</div>
+            </article>
+          `;
+        })
+        .join("");
+
+      applyDashboardSearch();
+      renderSearchSuggestions();
+    }
+
+    profileForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(profileForm);
+      profileState.name = sanitizeText(formData.get("name").toString());
+      profileState.style = formData.get("style").toString();
+      profileState.income = Number(formData.get("income")) || 0;
+      profileState.budget = Number(formData.get("budget")) || 0;
+      profileState.baseCurrency = formData.get("baseCurrency").toString() || "TRY";
+      profileState.savings = Number(formData.get("savings")) || 0;
+      profileState.focus = sanitizeText(formData.get("focus").toString()) || categories[0];
+
+      updateProfileSummary();
+      renderEntries();
+      renderInvestments();
+    });
+
+    entryForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(entryForm);
+      const title = sanitizeText(formData.get("title").toString());
+      const type = formData.get("type").toString();
+      const category = sanitizeText(formData.get("category").toString()) || categories[0];
+      const amount = Number(formData.get("amount")) || 0;
+      const currency = formData.get("currency").toString() || "TRY";
+      const date = formData.get("date").toString() || todayString;
+
+      if (!title || amount <= 0) {
+        return;
+      }
+
+      if (editingEntryId) {
+        const existingEntry = entryState.find((entry) => entry.id === editingEntryId);
+
+        if (existingEntry) {
+          existingEntry.title = title;
+          existingEntry.type = type;
+          existingEntry.category = category;
+          existingEntry.amount = amount;
+          existingEntry.currency = currency;
+          existingEntry.date = date;
+        }
+      } else {
+        entryState.push({ id: createEntryId(), title, type, category, amount, currency, date });
+      }
+
+      clearEntryForm();
+      renderEntries();
+    });
+
+    investmentForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(investmentForm);
+      const symbol = sanitizeText(formData.get("symbol").toString()).toUpperCase();
+      const name = sanitizeText(formData.get("name").toString());
+      const lot = Number(formData.get("lot")) || 0;
+      const buyPrice = Number(formData.get("buyPrice")) || 0;
+      const currentPrice = Number(formData.get("currentPrice")) || 0;
+      const market = sanitizeText(formData.get("market").toString()) || "BIST";
+
+      if (!symbol || !name || lot <= 0 || buyPrice <= 0 || currentPrice <= 0) {
+        return;
+      }
+
+      investmentState.push({
+        id: createEntryId(),
+        symbol,
+        name,
+        lot,
+        buyPrice,
+        currentPrice,
+        market
+      });
+
+      investmentForm.reset();
+      renderInvestments();
+      saveState();
+    });
+
+    addCategoryButton.addEventListener("click", addCategory);
+    chartTypeSelect.addEventListener("change", (event) => {
+      profileState.chartType = event.target.value;
+      updateGraphView();
+      saveState();
+    });
+    refreshRatesButton.addEventListener("click", () => {
+      rateUpdatedLabel.textContent = t("rate_updated_loading");
+      rateStatus.innerHTML = `<strong>${t("rate_status_label")}</strong> ${t("rate_status_refreshing")}`;
+      fetchLiveRates();
+    });
+    settingsToggle.addEventListener("click", () => {
+      const isOpen = sidebarSettingsPanel.classList.toggle("open");
+      settingsToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+    languageSelect.addEventListener("change", (event) => {
+      profileState.language = event.target.value;
+      applyLanguage();
+      renderInvestments();
+      saveState();
+    });
+    themeSelect.addEventListener("change", (event) => {
+      profileState.theme = event.target.value;
+      applyTheme();
+      saveState();
+    });
+    dashboardSearchInput.addEventListener("input", (event) => {
+      searchState.query = event.target.value.trim();
+      renderEntries();
+      applyDashboardSearch();
+      renderSearchSuggestions();
+    });
+    dashboardSearchInput.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") {
+        return;
+      }
+
+      event.preventDefault();
+      searchState.query = dashboardSearchInput.value.trim();
+      renderEntries();
+      applyDashboardSearch();
+      renderSearchSuggestions();
+      scrollToFirstSearchResult();
+    });
+    dashboardSearchInput.addEventListener("focus", () => {
+      renderSearchSuggestions();
+    });
+    dashboardSearchButton.addEventListener("click", () => {
+      searchState.query = dashboardSearchInput.value.trim();
+      renderEntries();
+      applyDashboardSearch();
+      renderSearchSuggestions();
+      scrollToFirstSearchResult();
+      dashboardSearchInput.focus();
+    });
+    searchSuggestions.addEventListener("click", (event) => {
+      const suggestionButton = event.target.closest(".search-suggestion");
+
+      if (!suggestionButton) {
+        return;
+      }
+
+      navigateFromSuggestion(suggestionButton);
+    });
+    document.addEventListener("click", (event) => {
+      if (event.target.closest(".search-box")) {
+        return;
+      }
+
+      searchSuggestions.hidden = true;
+    });
+    entryList.addEventListener("click", (event) => {
+      const editButton = event.target.closest("[data-entry-edit]");
+      const deleteButton = event.target.closest("[data-entry-delete]");
+
+      if (editButton) {
+        startEditingEntry(editButton.getAttribute("data-entry-edit"));
+        return;
+      }
+
+      if (deleteButton) {
+        deleteEntry(deleteButton.getAttribute("data-entry-delete"));
+      }
+    });
+    exportCsvButton.addEventListener("click", exportEntriesAsCsv);
+    exportJsonButton.addEventListener("click", exportBackupJson);
+    importJsonButton.addEventListener("click", () => {
+      importJsonInput.click();
+    });
+    importJsonInput.addEventListener("change", (event) => {
+      const [file] = event.target.files || [];
+      importBackupJson(file);
+      importJsonInput.value = "";
+    });
+    ratesBaseSelect.addEventListener("change", (event) => {
+      profileState.ratesBase = event.target.value;
+      renderRateCards(t("source_live"));
+      saveState();
+    });
+    categoryNameInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        addCategory();
+      }
+    });
+    resetDataButton.addEventListener("click", () => {
+      const confirmed = window.confirm(t("confirm_reset"));
+
+      if (!confirmed) {
+        return;
+      }
+
+      resetAllData();
+    });
+
+    loadState();
+    if (!Object.keys(rateHistory).length) {
+      pushRateSnapshot(Date.now());
+    } else {
+      pruneRateHistory();
+    }
+    applyTheme();
+    applyLanguage();
+    renderCategoryOptions();
+    updateProfileSummary();
+    entryDateInput.value = todayString;
+    renderRateCards(t("source_backup"));
+    renderEntries();
+    renderInvestments();
+    fetchLiveRates();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch((error) => {
+          console.error("Service worker kaydedilemedi:", error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+

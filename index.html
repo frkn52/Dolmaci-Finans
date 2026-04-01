@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17322c">
+  <meta name="application-name" content="Dolmacı Finans">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Dolmacı Finans">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon-192.svg">
+  <title>Dolmacı Finans | Kişisel Finans Asistanı</title>
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --bg-deep: #d9c5a1;
+      --surface: rgba(255, 250, 241, 0.92);
+      --surface-strong: #fffaf1;
+      --surface-dark: #17322c;
+      --text: #1e211d;
+      --muted: #58645d;
+      --line: rgba(34, 44, 33, 0.12);
+      --accent: #d96c3f;
+      --accent-strong: #b44d24;
+      --accent-soft: #f4d7bf;
+      --green: #2f7d57;
+      --gold: #b88b2d;
+      --shadow: 0 24px 60px rgba(65, 49, 28, 0.16);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    body[data-theme="dark"] {
+      --bg: #0f1218;
+      --bg-deep: #1a2230;
+      --surface: rgba(25, 29, 37, 0.94);
+      --surface-strong: #171b23;
+      --surface-dark: #f3f6fb;
+      --text: #edf2fb;
+      --muted: #a8b3c7;
+      --line: rgba(223, 231, 244, 0.1);
+      --accent: #8c6cff;
+      --accent-strong: #a892ff;
+      --accent-soft: #2a2148;
+      --green: #43c287;
+      --gold: #d5a940;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(217, 108, 63, 0.16), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(47, 125, 87, 0.14), transparent 24%),
+        linear-gradient(180deg, #f7f2e8 0%, #efe4d1 48%, #f8f4ec 100%);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    body[data-theme="dark"] {
+      background:
+        radial-gradient(circle at top left, rgba(140, 108, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(67, 194, 135, 0.14), transparent 24%),
+        linear-gradient(180deg, #0e1218 0%, #141b24 52%, #0f131b 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.24) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.35;
+    }
+
+    body[data-theme="dark"]::before {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      opacity: 0.22;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 241, 230, 0.96);
+      border-bottom: 1px solid rgba(34, 44, 33, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark {
+      display: none;
+    }
+
+    .hero-logo {
+      width: min(320px, 72%);
+      height: auto;
+      display: block;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 18px 32px rgba(23, 50, 44, 0.12));
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .topbar-controls select {
+      min-height: 42px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 33, 29, 0.12);
+      background: rgba(255, 255, 255, 0.98);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .nav-cta {
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: white;
+      background: var(--surface-dark);
+      font-weight: 700;
+    }
+
+    body[data-theme="dark"] .topbar,
+    body[data-theme="dark"] .hero-copy,
+    body[data-theme="dark"] .hero-panel,
+    body[data-theme="dark"] .panel,
+    body[data-theme="dark"] .insight-card,
+    body[data-theme="dark"] .profile-card,
+    body[data-theme="dark"] .workspace-card,
+    body[data-theme="dark"] .cta-panel,
+    body[data-theme="dark"] .quote,
+    body[data-theme="dark"] .dark-panel,
+    body[data-theme="dark"] .step,
+    body[data-theme="dark"] .profile-detail-card,
+    body[data-theme="dark"] .section-cta-banner,
+    body[data-theme="dark"] .footer-card,
+    body[data-theme="dark"] .mini-card {
+      background: rgba(20, 24, 33, 0.94);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    body[data-theme="dark"] .topbar-controls select,
+    body[data-theme="dark"] .button.secondary {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: #edf2fb;
+    }
+
+    body[data-theme="dark"] .nav,
+    body[data-theme="dark"] .nav a,
+    body[data-theme="dark"] .lead,
+    body[data-theme="dark"] .section-intro,
+    body[data-theme="dark"] .panel p,
+    body[data-theme="dark"] .insight-card p,
+    body[data-theme="dark"] .profile-card p,
+    body[data-theme="dark"] .mini-card p,
+    body[data-theme="dark"] .cta-panel p,
+    body[data-theme="dark"] .footer-card {
+      color: #b8c2d4;
+    }
+
+    body[data-theme="dark"] .section-cta-banner strong,
+    body[data-theme="dark"] .persona-card strong,
+    body[data-theme="dark"] .mini-card strong,
+    body[data-theme="dark"] .price,
+    body[data-theme="dark"] .summary-card strong,
+    body[data-theme="dark"] .entry-item strong,
+    body[data-theme="dark"] .form-section-header h4,
+    body[data-theme="dark"] .field label {
+      color: #edf2fb;
+    }
+
+    body[data-theme="dark"] .profile-card.featured,
+    body[data-theme="dark"] .section-cta-banner,
+    body[data-theme="dark"] .setup-intro {
+      background: linear-gradient(180deg, rgba(140, 108, 255, 0.18), rgba(20, 24, 33, 0.96));
+      border-color: rgba(168, 146, 255, 0.18);
+    }
+
+    body[data-theme="dark"] .dashboard-card,
+    body[data-theme="dark"] .analysis-card,
+    body[data-theme="dark"] .data-row,
+    body[data-theme="dark"] .dashboard-tools select,
+    body[data-theme="dark"] .profile-list span,
+    body[data-theme="dark"] .form-section,
+    body[data-theme="dark"] .field input,
+    body[data-theme="dark"] .field select,
+    body[data-theme="dark"] .tag,
+    body[data-theme="dark"] .summary-card,
+    body[data-theme="dark"] .entry-item {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #edf2fb;
+    }
+
+    body[data-theme="dark"] .mini-card,
+    body[data-theme="dark"] .feature-points span,
+    body[data-theme="dark"] .metric-list div,
+    body[data-theme="dark"] .profile-chip,
+    body[data-theme="dark"] .inline-cta,
+    body[data-theme="dark"] .section-cta-banner,
+    body[data-theme="dark"] .detail-points span,
+    body[data-theme="dark"] .persona-card {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body[data-theme="dark"] .hero-panel {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+        rgba(12, 17, 24, 0.98);
+    }
+
+    body[data-theme="dark"] .button.primary,
+    body[data-theme="dark"] .nav-cta {
+      background: linear-gradient(135deg, #7d63ff, #a892ff);
+      color: #ffffff;
+    }
+
+    .hero {
+      padding: 48px 0 26px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-panel,
+    .panel,
+    .insight-card,
+    .profile-card,
+    .workspace-card,
+    .cta-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-copy {
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(47, 125, 87, 0.12);
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.04;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 7vw, 6.2rem);
+      max-width: 9ch;
+    }
+
+    .lead,
+    .section-intro,
+    .panel p,
+    .insight-card p,
+    .profile-card p,
+    .workspace-card p,
+    .stat-label,
+    .data-row span,
+    .mini-card p,
+    .step p,
+    .cta-panel p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .lead {
+      max-width: 58ch;
+      margin: 20px 0 0;
+      font-size: 1.04rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(32, 26, 18, 0.12);
+    }
+
+    .button.primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #ef8b52);
+    }
+
+    .button.secondary {
+      border-color: rgba(30, 33, 29, 0.14);
+      background: rgba(255, 255, 255, 0.54);
+    }
+
+    .button.danger {
+      color: white;
+      background: linear-gradient(135deg, #a83f34, #d55c48);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+      color: var(--surface-dark);
+    }
+
+    .spark {
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(217, 108, 63, 0.12);
+      filter: blur(6px);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .spark.one {
+      width: 180px;
+      height: 180px;
+      top: -50px;
+      right: -60px;
+    }
+
+    .spark.two {
+      width: 86px;
+      height: 86px;
+      right: 100px;
+      bottom: 24px;
+      animation-delay: 1s;
+    }
+
+    .hero-panel {
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+        rgba(20, 44, 38, 0.95);
+      color: #f5f1e8;
+    }
+
+    .dashboard-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 251, 244, 0.16);
+      border: 1px solid rgba(255, 251, 244, 0.16);
+    }
+
+    .dashboard-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dashboard-tools {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+
+    .dashboard-tools label {
+      font-size: 0.8rem;
+      color: rgba(245, 241, 232, 0.68);
+    }
+
+    .dashboard-tools select {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.18);
+      color: #f5f1e8;
+    }
+
+    .dashboard-tools select option {
+      color: var(--text);
+    }
+
+    .dashboard-head span,
+    .analysis-head span {
+      color: rgba(245, 241, 232, 0.68);
+      font-size: 0.92rem;
+    }
+
+    .balance {
+      margin-top: 14px;
+      font-size: clamp(2.3rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .graph {
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      height: 120px;
+      margin-top: 18px;
+    }
+
+    .graph-panel {
+      margin-top: 18px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 16px 16px 8px 8px;
+      background: linear-gradient(180deg, #f3d4b3, #d96c3f);
+      opacity: 0.45;
+      transform-origin: bottom;
+      animation: rise 1.2s ease forwards;
+    }
+
+    .bar.active {
+      opacity: 1;
+      background: linear-gradient(180deg, #f5dd8f, #c58e24);
+    }
+
+    .graph-view {
+      display: none;
+    }
+
+    .graph-view.active {
+      display: block;
+    }
+
+    .graph-labels {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      color: rgba(245, 241, 232, 0.72);
+      font-size: 0.76rem;
+      text-align: center;
+    }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .donut-chart {
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(#f3d4b3 0deg, #d96c3f 120deg, #f5dd8f 240deg, #2f7d57 360deg);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .donut-chart::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      background: rgba(20, 44, 38, 0.96);
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 28px;
+      color: #fff3df;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .donut-legend,
+    .category-breakdown {
+      display: grid;
+      gap: 10px;
+    }
+
+    .donut-legend-item,
+    .breakdown-item {
+      display: grid;
+      gap: 6px;
+    }
+
+    .legend-top,
+    .breakdown-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(245, 241, 232, 0.78);
+      font-size: 0.9rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .breakdown-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .breakdown-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f3d4b3, #d96c3f);
+    }
+
+    .analysis-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(243, 215, 188, 0.24), rgba(255, 255, 255, 0.12));
+      border: 1px solid rgba(255, 244, 225, 0.18);
+    }
+
+    .analysis-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .analysis-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(244, 215, 191, 0.2);
+      color: #f4d7bf;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .analysis-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 12px;
+    }
+
+    .analysis-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: rgba(245, 241, 232, 0.78);
+    }
+
+    .data-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 251, 244, 0.16);
+    }
+
+    .data-row strong {
+      color: #fff3df;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+    }
+
+    .section-intro {
+      max-width: 60ch;
+      margin: 10px 0 0;
+    }
+
+    .feature-grid,
+    .insight-grid,
+    .profile-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .panel {
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      top: -40px;
+      right: -36px;
+      background: rgba(217, 108, 63, 0.08);
+    }
+
+    .panel h3 {
+      font-size: 1.45rem;
+      margin-bottom: 12px;
+    }
+
+    .panel-number {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-weight: 800;
+    }
+
+    .feature-points {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .feature-points span {
+      padding: 11px 13px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .story-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+    }
+
+    .dark-panel {
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, #1a3a33 0%, #122a25 100%);
+      color: #f6f1e7;
+      box-shadow: var(--shadow);
+    }
+
+    .dark-panel h3 {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .dark-panel p {
+      margin: 0 0 18px;
+      color: rgba(246, 241, 231, 0.74);
+      line-height: 1.7;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .metric-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .metric-list strong {
+      color: #fff8eb;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(30, 33, 29, 0.1);
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+    }
+
+    .step-index {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--surface-dark);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .insight-card {
+      padding: 24px;
+    }
+
+    .insight-label {
+      display: inline-flex;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(47, 125, 87, 0.12);
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .insight-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .insight-card strong {
+      color: var(--accent-strong);
+    }
+
+    .profile-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+    }
+
+    .profile-card {
+      padding: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .profile-card.featured {
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.2), rgba(255, 250, 241, 0.96));
+      border-color: rgba(180, 77, 36, 0.22);
+    }
+
+    .profile-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--surface-dark);
+      letter-spacing: -0.04em;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: normal;
+    }
+
+    .profile-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-list span {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+    }
+
+    .profile-showcase {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+    }
+
+    .profile-hero-card {
+      padding: 28px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.22), transparent 28%),
+        linear-gradient(145deg, #17322c 0%, #224940 55%, #2d5d51 100%);
+      color: #fff4e6;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      gap: 20px;
+    }
+
+    .profile-hero-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .profile-hero-top span {
+      color: rgba(255, 244, 230, 0.72);
+      font-size: 0.92rem;
+    }
+
+    .profile-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f7dfb9;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .profile-hero-card h3 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 0;
+      line-height: 1.08;
+    }
+
+    .profile-hero-card p {
+      margin: 0;
+      color: rgba(255, 244, 230, 0.76);
+      line-height: 1.7;
+    }
+
+    .profile-meter {
+      display: grid;
+      gap: 10px;
+    }
+
+    .meter-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .meter-fill {
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f5dd8f, #d96c3f);
+    }
+
+    .meter-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(255, 244, 230, 0.78);
+      font-size: 0.92rem;
+    }
+
+    .profile-chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .profile-chip {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff0d8;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .inline-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .inline-cta span {
+      color: rgba(255, 244, 230, 0.78);
+      font-size: 0.95rem;
+    }
+
+    .section-cta-banner {
+      margin-top: 18px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(217, 108, 63, 0.18), rgba(255, 250, 241, 0.92));
+      border: 1px solid rgba(180, 77, 36, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .section-cta-banner strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--surface-dark);
+    }
+
+    .section-cta-banner p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .profile-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .profile-detail-card {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .profile-detail-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .profile-detail-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .detail-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .detail-points span {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(30, 33, 29, 0.06);
+      color: var(--muted);
+    }
+
+    .persona-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .persona-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.14), rgba(255, 255, 255, 0.84));
+      border: 1px solid rgba(180, 77, 36, 0.14);
+    }
+
+    .persona-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--surface-dark);
+    }
+
+    .workspace-card {
+      padding: 26px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .workspace-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .setup-intro {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.14), rgba(255, 255, 255, 0.78));
+      border: 1px solid rgba(180, 77, 36, 0.14);
+    }
+
+    .setup-intro strong {
+      color: var(--accent-strong);
+      font-size: 1rem;
+    }
+
+    .setup-points {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-section {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .form-section-header {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-section-header h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--surface-dark);
+    }
+
+    .form-section-header p,
+    .field-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--surface-dark);
+    }
+
+    .field input,
+    .field select {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 33, 29, 0.12);
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--text);
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: 2px solid rgba(217, 108, 63, 0.18);
+      border-color: rgba(180, 77, 36, 0.28);
+    }
+
+    .inline-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .tag-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .button.submit {
+      width: fit-content;
+      cursor: pointer;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .profile-preview {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(23, 50, 44, 0.98), rgba(28, 62, 54, 0.94));
+      color: #fff4e6;
+    }
+
+    .profile-preview h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .preview-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .preview-pill {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .preview-pill span {
+      display: block;
+      color: rgba(255, 244, 230, 0.68);
+      font-size: 0.84rem;
+      margin-bottom: 4px;
+    }
+
+    .preview-pill strong {
+      font-size: 1rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .summary-card strong {
+      font-size: 1.4rem;
+      color: var(--surface-dark);
+    }
+
+    .entry-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .entry-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(30, 33, 29, 0.08);
+      border-left: 5px solid rgba(30, 33, 29, 0.12);
+    }
+
+    .entry-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--surface-dark);
+    }
+
+    .entry-meta,
+    .entry-amount {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .entry-amount {
+      font-weight: 800;
+      color: var(--accent-strong);
+      white-space: nowrap;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .hero-copy:hover,
+      .hero-panel:hover,
+      .panel:hover,
+      .insight-card:hover,
+      .profile-card:hover,
+      .workspace-card:hover,
+      .cta-panel:hover,
+      .summary-card:hover,
+      .mini-card:hover,
+      .entry-item:hover,
+      .setup-intro:hover,
+      .form-section:hover,
+      .profile-preview:hover,
+      .step:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 70px rgba(65, 49, 28, 0.2);
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      }
+
+      .hero-copy:hover,
+      .panel:hover,
+      .insight-card:hover,
+      .profile-card:hover,
+      .workspace-card:hover,
+      .summary-card:hover,
+      .entry-item:hover,
+      .form-section:hover {
+        border-color: rgba(180, 77, 36, 0.18);
+      }
+
+      .tag,
+      .legend-dot,
+      .breakdown-fill,
+      .data-row,
+      .donut-chart,
+      .graph .bar {
+        transition: transform 0.22s ease, opacity 0.22s ease, filter 0.22s ease, background-color 0.22s ease;
+      }
+
+      .tag:hover {
+        transform: translateY(-2px);
+        filter: saturate(1.1);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .data-row:hover {
+        transform: translateX(3px);
+        background: rgba(255, 251, 244, 0.14);
+      }
+
+      .graph .bar:hover {
+        opacity: 1;
+        transform: scaleY(1.04);
+      }
+
+      .donut-chart:hover {
+        transform: rotate(5deg) scale(1.02);
+      }
+
+      .entry-item:hover .entry-amount {
+        color: var(--surface-dark);
+      }
+    }
+
+    .empty-state {
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px dashed rgba(30, 33, 29, 0.14);
+      color: var(--muted);
+    }
+
+    .ai-note {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(217, 108, 63, 0.12), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(180, 77, 36, 0.12);
+      color: var(--text);
+    }
+
+    .ai-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent-strong);
+    }
+
+    .cta-panel {
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background:
+        radial-gradient(circle at top left, rgba(217, 108, 63, 0.14), transparent 34%),
+        linear-gradient(135deg, rgba(255, 250, 241, 0.94), rgba(244, 230, 205, 0.9));
+    }
+
+    .cta-panel h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    footer {
+      padding: 18px 0 40px;
+    }
+
+    .footer-card {
+      padding: 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @keyframes rise {
+      from {
+        transform: scaleY(0.2);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .story-layout,
+      .feature-grid,
+      .insight-grid,
+      .profile-grid,
+      .profile-showcase,
+      .workspace-grid,
+      .cta-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-panel {
+        display: grid;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .section-header,
+      .footer-card {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        gap: 12px;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .nav a {
+        white-space: nowrap;
+      }
+
+      .dashboard-head,
+      .analysis-head,
+      .donut-wrap,
+      .entry-item,
+      .inline-cta,
+      .section-cta-banner {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .dashboard-tools {
+        width: 100%;
+        justify-items: start;
+      }
+
+      .dashboard-tools select {
+        width: 100%;
+      }
+
+      .field-row,
+      .summary-grid,
+      .inline-form,
+      .preview-grid,
+      .graph-labels,
+      .profile-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .entry-amount {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        width: min(100% - 20px, 1160px);
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .topbar-inner {
+        padding: 14px 0;
+      }
+
+      .brand {
+        width: 100%;
+      }
+
+      .hero-logo {
+        width: min(260px, 78%);
+      }
+
+      .hero-actions,
+      .form-actions {
+        width: 100%;
+      }
+
+      .hero-actions .button,
+      .form-actions .button,
+      .nav-cta,
+      .button.submit,
+      .inline-cta .button,
+      .section-cta-banner .button {
+        width: 100%;
+      }
+
+      .balance {
+        font-size: 2rem;
+      }
+
+      .graph {
+        height: 92px;
+        gap: 8px;
+      }
+
+      .donut-chart {
+        width: 112px;
+        height: 112px;
+      }
+
+      .donut-chart::after {
+        inset: 18px;
+      }
+
+      .donut-center {
+        padding: 20px;
+        font-size: 0.85rem;
+      }
+
+      .graph-labels {
+        display: none;
+      }
+
+      .setup-intro,
+      .form-section,
+      .profile-preview,
+      .summary-card,
+      .entry-item,
+      .ai-note {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-copy,
+      .hero-panel,
+      .panel,
+      .insight-card,
+      .price-card,
+      .cta-panel,
+      .dark-panel,
+      .step {
+        border-radius: 24px;
+      }
+
+      .hero-copy,
+      .hero-panel,
+      .panel,
+      .insight-card,
+      .price-card,
+      .workspace-card {
+        padding: 22px;
+      }
+
+      h1 {
+        max-width: 11ch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#anasayfa" aria-label="Dolmacı Finans">
+        <span class="brand-mark">Df</span>
+        <span>Dolmacı Finans</span>
+      </a>
+      <div class="topbar-controls">
+        <select id="landing-language-select" aria-label="Dil seçimi">
+          <option value="tr">Türkçe</option>
+          <option value="en">English</option>
+        </select>
+        <select id="landing-theme-select" aria-label="Tema seçimi">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+        <nav class="nav" aria-label="Sayfa bölümleri">
+          <a href="#ozellikler" data-i18n="nav_features">Özellikler</a>
+          <a href="#akis" data-i18n="nav_flow">Nasıl Çalışır</a>
+          <a href="#icgoruler" data-i18n="nav_ai">AI Analizi</a>
+          <a href="#profil" data-i18n="nav_profile">Profilin</a>
+          <a class="nav-cta" href="app.html" data-i18n="nav_app">Uygulamaya Geç</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="anasayfa">
+      <div class="container hero-grid">
+        <article class="hero-copy">
+          <img class="hero-logo" src="dolmaci-logo.png" alt="Dolmacı Finans logosu">
+          <span class="eyebrow" data-i18n="hero_eyebrow">AI Destekli Kişisel Finans Asistanı</span>
+          <h1 data-i18n="hero_title">Paranı sadece takip etme, anla.</h1>
+          <p class="lead" data-i18n="hero_text">
+            Dolmacı Finans; gelir, gider, bütçe ve alışkanlıklarını tek yerde toplayan; ardından bunları
+            senin için açıklayan kişisel finans asistanı. Sadece rapor göstermez, neyin riskli olduğunu ve
+            nerede tasarruf fırsatı bulunduğunu da söyler.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="app.html" data-i18n="hero_primary">Uygulamaya Geç</a>
+            <a class="button secondary" href="#icgoruler" data-i18n="hero_secondary">AI İçgörülerini Gör</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="mini-card">
+              <strong>%18</strong>
+              <p data-i18n="stat_one">Yemek harcamasında artış tespiti</p>
+            </div>
+            <div class="mini-card">
+              <strong>4.2 sn</strong>
+              <p data-i18n="stat_two">Aylık finans özeti üretim süresi</p>
+            </div>
+            <div class="mini-card">
+              <strong>7/24</strong>
+              <p data-i18n="stat_three">Doğal dilde soru-cevap desteği</p>
+            </div>
+          </div>
+
+          <span class="spark one" aria-hidden="true"></span>
+          <span class="spark two" aria-hidden="true"></span>
+        </article>
+
+        <aside class="hero-panel" aria-label="Ürün önizleme paneli">
+          <div class="dashboard-card">
+            <div class="dashboard-head">
+              <div>
+                <strong>Bu Ayki Finans Durumu</strong>
+                <span id="hero-period">Bu ay</span>
+              </div>
+              <div class="dashboard-tools">
+                <label for="chart-type">Grafik türü</label>
+                <select id="chart-type">
+                  <option value="bar">Çubuk</option>
+                  <option value="donut">Dairesel</option>
+                  <option value="category">Kategori dağılımı</option>
+                </select>
+              </div>
+            </div>
+            <div class="balance" id="hero-balance">₺0</div>
+            <div class="graph-panel">
+              <div class="graph-view active" id="graph-view-bar">
+                <div class="graph" aria-hidden="true" id="hero-graph">
+                  <div class="bar" data-bar="income" style="height: 24%;"></div>
+                  <div class="bar" data-bar="expense" style="height: 18%;"></div>
+                  <div class="bar active" data-bar="remaining" style="height: 22%;"></div>
+                  <div class="bar" data-bar="budget" style="height: 20%;"></div>
+                  <div class="bar" data-bar="savings" style="height: 16%;"></div>
+                  <div class="bar" data-bar="count" style="height: 10%;"></div>
+                </div>
+                <div class="graph-labels">
+                  <span>Gelir</span>
+                  <span>Gider</span>
+                  <span>Kalan</span>
+                  <span>Limit</span>
+                  <span>Hedef</span>
+                  <span>Kayıt</span>
+                </div>
+              </div>
+
+              <div class="graph-view" id="graph-view-donut">
+                <div class="donut-wrap">
+                  <div class="donut-chart" id="donut-chart">
+                    <div class="donut-center" id="donut-center">Veri yok</div>
+                  </div>
+                  <div class="donut-legend" id="donut-legend">
+                    <div class="empty-state">Kategori dağılımı için gider kaydı ekle.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="graph-view" id="graph-view-category">
+                <div class="category-breakdown" id="category-breakdown">
+                  <div class="empty-state">Kategori bazlı görünüm için gider ekle.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card">
+            <div class="analysis-head">
+              <span class="analysis-badge">AI Analizi</span>
+              <span>Dolmacı AI</span>
+            </div>
+            <h3 id="hero-analysis-title">Profilini oluşturduğunda finans görünümün burada canlanacak.</h3>
+            <p id="hero-analysis-body">
+              Gelir, gider ve bütçe verilerini girdikçe bu alan senin gerçek durumuna göre güncellenecek.
+            </p>
+
+            <div class="data-list">
+              <div class="data-row">
+                <span>En yüksek kategori</span>
+                <strong id="hero-top-category">Henüz yok</strong>
+              </div>
+              <div class="data-row">
+                <span>Tasarruf önerisi</span>
+                <strong id="hero-saving-potential">₺0</strong>
+              </div>
+              <div class="data-row">
+                <span>Bütçe riski</span>
+                <strong id="hero-risk-level">Başlangıç</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="ozellikler">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2>Takipten fazlası</h2>
+            <p class="section-intro" data-i18n="features_intro">
+              Harcamaları kaydetmek başlangıç. Dolmacı Finans, veriyi içgörüye çevirerek senin gerçekten karar vermene yardımcı olur.
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <article class="panel">
+            <span class="panel-number">01</span>
+            <h3>Akıllı Harcama Takibi</h3>
+            <p>
+              Gelir ve giderlerini kategorilere ayır, günlük akışını kaybetmeden tüm hareketlerini tek panelde izle.
+            </p>
+            <div class="feature-points">
+              <span>Gelir ve gider kaydı</span>
+              <span>Otomatik kategori önerisi</span>
+              <span>Aylık ve haftalık filtre</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <span class="panel-number">02</span>
+            <h3>AI Destekli Finans Yorumu</h3>
+            <p>
+              Sadece grafik değil, açıklama da sunar. Harcama artışını, sıra dışı hareketleri ve bütçe riskini doğal dille açıklar.
+            </p>
+            <div class="feature-points">
+              <span>Aylık özet üretimi</span>
+              <span>Anormal harcama tespiti</span>
+              <span>Doğal dilde soru-cevap</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <span class="panel-number">03</span>
+            <h3>Tasarruf ve Tahmin Motoru</h3>
+            <p>
+              Senin rutinini öğrenir, gelecek ay tahminini çıkarır ve gereksiz masraflar için net aksiyon önerir.
+            </p>
+            <div class="feature-points">
+              <span>Ay sonu bütçe tahmini</span>
+              <span>Tasarruf fırsatı listesi</span>
+              <span>Tekrarlayan ödeme analizi</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="akis">
+      <div class="container story-layout">
+        <article class="dark-panel">
+          <h3 data-i18n="solve_title">Dolmacı Finans neyi çözüyor?</h3>
+          <p>
+            Birçok kişi harcamasını görüyor ama neden arttığını, hangi alışkanlığın bütçeyi bozduğunu ve nereden başlaması gerektiğini bilmiyor.
+            Dolmacı Finans bu boşluğu kapatıyor.
+          </p>
+          <div class="metric-list">
+            <div>
+              <span>Dağınık finans verisi</span>
+              <strong>Tek merkezde toplanır</strong>
+            </div>
+            <div>
+              <span>Okunmayan tablolar</span>
+              <strong>Anlaşılır özetlere dönüşür</strong>
+            </div>
+            <div>
+              <span>Belirsiz bütçe riski</span>
+              <strong>Önden uyarı verir</strong>
+            </div>
+            <div>
+              <span>Pasif takip alışkanlığı</span>
+              <strong>Aksiyon önerisine döner</strong>
+            </div>
+          </div>
+        </article>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step-index">1</span>
+            <div>
+              <h3>Verini ekle</h3>
+              <p>Gelir, gider, abonelik ve bütçe bilgilerini uygulamaya gir. Arayüz sade, hızlı ve mobil odaklıdır.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <span class="step-index">2</span>
+            <div>
+              <h3>AI deseni yakalasın</h3>
+              <p>Dolmacı Finans, tekrar eden harcamaları, kategori artışlarını ve sıra dışı eğilimleri otomatik yorumlar.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <span class="step-index">3</span>
+            <div>
+              <h3>Karar ver</h3>
+              <p>“Bu ay neden fazla harcadım?” ya da “Nereden kısabilirim?” gibi sorulara net cevap al ve aksiyon planı çıkar.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="icgoruler">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="ai_title">Örnek AI içgörüleri</h2>
+            <p class="section-intro" data-i18n="ai_intro">
+              Ürünün farkını hissettiren şey tam olarak burası. Dolmacı Finans, finans verisini insan diliyle yorumlar.
+            </p>
+          </div>
+        </div>
+
+        <div class="insight-grid">
+          <article class="insight-card">
+            <span class="insight-label">Aylık Özet</span>
+            <h3>“Mart ayında en büyük giderin <strong>yemek</strong> ve <strong>ulaşım</strong> oldu.”</h3>
+            <p>Geçen aya göre dışarıda yemek harcaman yükseldi. Market giderlerin ise dengeli kaldı.</p>
+          </article>
+
+          <article class="insight-card">
+            <span class="insight-label">Risk Uyarısı</span>
+            <h3>“Bu tempoda devam edersen ay sonu bütçeni <strong>₺2.100</strong> aşabilirsin.”</h3>
+            <p>Özellikle hafta sonu harcamalarında yoğunlaşma var. Uygulama bunu erken aşamada fark eder.</p>
+          </article>
+
+          <article class="insight-card">
+            <span class="insight-label">Tasarruf Önerisi</span>
+            <h3>“Düşük kullandığın iki aboneliği kapatırsan aylık <strong>₺640</strong> tasarruf edebilirsin.”</h3>
+            <p>Dolmacı Finans, tekrar eden ödemeler içinden düşük değer oluşturan kalemleri görünür hale getirir.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="profil">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="profile_title">Kişisel harcama profilin</h2>
+            <p class="section-intro" data-i18n="profile_intro">
+              Bu alan senin finans düzenini kişiselleştirmek için tasarlandı. Kendi profilini oluşturup bütçe yapını,
+              önceliklerini ve alışkanlıklarını tek yerde görebilirsin.
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-showcase">
+          <article class="profile-hero-card">
+            <div class="profile-hero-top">
+              <div>
+                <span>Kişisel finans görünümü</span>
+                <h3>Profilin uygulamanın geri kalanını şekillendirir.</h3>
+              </div>
+              <span class="profile-badge">Kişisel Mod</span>
+            </div>
+            <p>
+              Dolmacı Finans seni tek tip kullanıcı gibi ele almaz. Gelir düzenin, bütçe sınırın, tasarruf hedefin
+              ve öne çıkan kategori tercihlerin bir araya gelerek tamamen sana ait bir finans profili oluşturur.
+            </p>
+
+            <div class="profile-meter">
+              <div class="meter-meta">
+                <span>Profil tamamlama hissi</span>
+                <strong>Güçlü başlangıç</strong>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill"></div>
+              </div>
+              <div class="meter-meta">
+                <span>Bütçe + kategori + hedef</span>
+                <span>AI yorumları için hazır altyapı</span>
+              </div>
+            </div>
+
+            <div class="profile-chip-grid">
+              <span class="profile-chip">Aylık limit tanımı</span>
+              <span class="profile-chip">Tasarruf hedefi</span>
+              <span class="profile-chip">Öncelikli kategori</span>
+              <span class="profile-chip">Tarza göre yorum</span>
+            </div>
+
+            <div class="inline-cta">
+              <span>Profilini oluşturup doğrudan kayıt girmeye başlamak için işlem ekranına geç.</span>
+              <a class="button primary" href="app.html">Uygulamayı Aç</a>
+            </div>
+          </article>
+
+          <div class="profile-side">
+            <article class="profile-detail-card">
+              <h3>Bu bölüm neden önemli?</h3>
+              <p>
+                Profil alanı doldurulduğunda grafikler, AI notları ve bütçe risk uyarıları daha anlamlı hale gelir.
+                Yani burası sadece ayar ekranı değil, uygulamanın kişiselleştirme merkezi.
+              </p>
+              <div class="detail-points">
+                <span>Gelir ve limit verisi sayesinde “kalan alan” hesabı doğru oluşur.</span>
+                <span>Öncelikli kategori seçimi, hangi harcamayı daha sık izlemen gerektiğini öne çıkarır.</span>
+                <span>Para yönetim tarzı, gelecekte öneri tonunu daha kişisel hale getirebilir.</span>
+              </div>
+            </article>
+
+            <article class="profile-detail-card">
+              <h3>Örnek profil senaryoları</h3>
+              <div class="persona-grid">
+                <div class="persona-card">
+                  <strong>Kontrollü profil</strong>
+                  Harcama limiti net olan ve risk yükseldiğinde hızlı uyarı almak isteyen kullanım tarzı.
+                </div>
+                <div class="persona-card">
+                  <strong>Biriktiren profil</strong>
+                  Tasarruf hedefini öne koyan ve gereksiz giderleri daha hızlı fark etmek isteyen yapı.
+                </div>
+                <div class="persona-card">
+                  <strong>Esnek profil</strong>
+                  Gelir-gider akışı değişken olsa da kategorileri düzenli izlemek isteyen kullanıcı tipi.
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="section-cta-banner">
+          <div>
+            <strong>Doğrudan kullanmak isteyenler için</strong>
+            <p>Tanıtımı atlayıp profil, kategori ve harcama giriş ekranına hemen geçebilirsin.</p>
+          </div>
+          <a class="button primary" href="app.html">Uygulamaya Geç</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="basla">
+      <div class="container">
+        <article class="cta-panel">
+          <div>
+            <h2 data-i18n="cta_title">Tanıtımdan uygulamaya geç.</h2>
+            <p data-i18n="cta_text">
+              Bu sayfa ürünün ne yaptığını anlatıyor. Gerçek profil oluşturma, kategori yönetimi, kayıt ekleme ve
+              kalıcı veri kullanımı için uygulama ekranına geçebilirsin.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <a class="button primary" href="app.html" data-i18n="cta_primary">Uygulamayı Aç</a>
+            <a class="button secondary" href="#anasayfa" data-i18n="cta_secondary">Yukarı Dön</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-card">
+      <span data-i18n="footer_one">Dolmacı Finans kişisel kullanım arayüzü</span>
+      <span data-i18n="footer_two">AI destekli kişisel finans asistanın</span>
+    </div>
+  </footer>
+
+  <script>
+    const storageKey = "dolmaci-finans-data";
+    const landingLanguageSelect = document.querySelector("#landing-language-select");
+    const landingThemeSelect = document.querySelector("#landing-theme-select");
+    const landingState = {
+      language: "tr",
+      theme: "light"
+    };
+
+    const landingTranslations = {
+      tr: {
+        nav_features: "Özellikler",
+        nav_flow: "Nasıl Çalışır",
+        nav_ai: "AI Analizi",
+        nav_profile: "Profilin",
+        nav_app: "Uygulamaya Geç",
+        hero_eyebrow: "AI Destekli Kişisel Finans Asistanı",
+        hero_title: "Paranı sadece takip etme, anla.",
+        hero_text: "Dolmacı Finans; gelir, gider, bütçe ve alışkanlıklarını tek yerde toplayan; ardından bunları senin için açıklayan kişisel finans asistanı. Sadece rapor göstermez, neyin riskli olduğunu ve nerede tasarruf fırsatı bulunduğunu da söyler.",
+        hero_primary: "Uygulamaya Geç",
+        hero_secondary: "AI İçgörülerini Gör",
+        stat_one: "Yemek harcamasında artış tespiti",
+        stat_two: "Aylık finans özeti üretim süresi",
+        stat_three: "Doğal dilde soru-cevap desteği",
+        features_intro: "Harcamaları kaydetmek başlangıç. Dolmacı Finans, veriyi içgörüye çevirerek senin gerçekten karar vermene yardımcı olur.",
+        solve_title: "Dolmacı Finans neyi çözüyor?",
+        ai_title: "Örnek AI içgörüleri",
+        ai_intro: "Ürünün farkını hissettiren şey tam olarak burası. Dolmacı Finans, finans verisini insan diliyle yorumlar.",
+        profile_title: "Kişisel harcama profilin",
+        profile_intro: "Bu alan senin finans düzenini kişiselleştirmek için tasarlandı. Kendi profilini oluşturup bütçe yapını, önceliklerini ve alışkanlıklarını tek yerde görebilirsin.",
+        cta_title: "Tanıtımdan uygulamaya geç.",
+        cta_text: "Bu sayfa ürünün ne yaptığını anlatıyor. Gerçek profil oluşturma, kategori yönetimi, kayıt ekleme ve kalıcı veri kullanımı için uygulama ekranına geçebilirsin.",
+        cta_primary: "Uygulamayı Aç",
+        cta_secondary: "Yukarı Dön",
+        footer_one: "Dolmacı Finans kişisel kullanım arayüzü",
+        footer_two: "AI destekli kişisel finans asistanın"
+      },
+      en: {
+        nav_features: "Features",
+        nav_flow: "How It Works",
+        nav_ai: "AI Insights",
+        nav_profile: "Your Profile",
+        nav_app: "Open App",
+        hero_eyebrow: "AI-Powered Personal Finance Assistant",
+        hero_title: "Don't just track your money, understand it.",
+        hero_text: "Dolmacı Finans brings your income, expenses, budget, and habits together in one place, then explains them for you. It does not just show reports, it highlights risk areas and saving opportunities.",
+        hero_primary: "Open App",
+        hero_secondary: "See AI Insights",
+        stat_one: "Dining expense increase detection",
+        stat_two: "Monthly finance summary generation time",
+        stat_three: "Natural language Q&A support",
+        features_intro: "Recording expenses is only the beginning. Dolmacı Finans turns your data into insights that actually help you make decisions.",
+        solve_title: "What does Dolmacı Finans solve?",
+        ai_title: "Sample AI insights",
+        ai_intro: "This is where the product stands out. Dolmacı Finans interprets financial data in plain human language.",
+        profile_title: "Your personal spending profile",
+        profile_intro: "This area is designed to personalize your financial setup. You can shape your own profile, budget structure, priorities, and habits in one place.",
+        cta_title: "Move from intro to app.",
+        cta_text: "This page explains what the product does. To create profiles, manage categories, add records, and use persistent data, move to the app screen.",
+        cta_primary: "Open App",
+        cta_secondary: "Back to Top",
+        footer_one: "Dolmacı Finans personal experience",
+        footer_two: "Your AI-powered personal finance assistant"
+      }
+    };
+
+    function readLandingState() {
+      const saved = localStorage.getItem(storageKey);
+      if (!saved) {
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.profile) {
+          landingState.language = parsed.profile.language || "tr";
+          landingState.theme = parsed.profile.theme || "light";
+        }
+      } catch (error) {
+        console.error("Landing ayarları okunamadı:", error);
+      }
+    }
+
+    function saveLandingState() {
+      let parsed = {};
+      const saved = localStorage.getItem(storageKey);
+
+      if (saved) {
+        try {
+          parsed = JSON.parse(saved);
+        } catch (error) {
+          parsed = {};
+        }
+      }
+
+      parsed.profile = {
+        ...(parsed.profile || {}),
+        language: landingState.language,
+        theme: landingState.theme
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(parsed));
+    }
+
+    function applyLandingTheme() {
+      document.body.setAttribute("data-theme", landingState.theme);
+      landingThemeSelect.value = landingState.theme;
+    }
+
+    function applyLandingLanguage() {
+      const locale = landingTranslations[landingState.language] || landingTranslations.tr;
+      landingLanguageSelect.value = landingState.language;
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        if (locale[key]) {
+          element.textContent = locale[key];
+        }
+      });
+    }
+
+    readLandingState();
+    applyLandingTheme();
+    applyLandingLanguage();
+
+    landingLanguageSelect.addEventListener("change", (event) => {
+      landingState.language = event.target.value;
+      applyLandingLanguage();
+      saveLandingState();
+    });
+
+    landingThemeSelect.addEventListener("change", (event) => {
+      landingState.theme = event.target.value;
+      applyLandingTheme();
+      saveLandingState();
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch((error) => {
+          console.error("Service worker kaydedilemedi:", error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
